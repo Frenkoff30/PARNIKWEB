@@ -3,12 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Parník Praha — plavby po Vltavě | Redesign</title>
+<title>Parník Praha | Plavby po Vltavě</title>
 <meta name="description" content="Vyhlídkové plavby, obědy a večeře na palubě parníku v Praze. 365 dní v roce, za každého počasí. Pronájem lodí na firemní akce, svatby a oslavy.">
 <meta name="theme-color" content="#08171F">
-
 <meta property="og:type" content="website">
-<meta property="og:title" content="Parník Praha — Praha vypadá jinak z paluby">
+<meta property="og:title" content="Parník Praha, Praha vypadá jinak z paluby">
 <meta property="og:description" content="Vyhlídkové plavby, obědy a večeře na palubě parníku. 365 dní v roce.">
 <meta property="og:locale" content="cs_CZ">
 
@@ -16,17 +15,14 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://images.unsplash.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2308171F'/%3E%3Cpath d='M5 21h22l-3 5H8z' fill='%23C9A227'/%3E%3Crect x='9' y='14' width='14' height='6' fill='%23C9A227'/%3E%3Crect x='14' y='6' width='3' height='8' fill='%23C9A227'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/css/style.css">
-<!-- progresivní vylepšení: bez JS zůstane veškerý obsah viditelný -->
 <script>document.documentElement.classList.add('js')</script>
 </head>
 
 <body>
 <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
 
-<!-- ============ LODNÍ LANO — SCROLL PROGRESS ============ -->
 <div class="rail" aria-hidden="true">
   <div class="rail__fill"></div>
   <div class="rail__boat">
@@ -37,23 +33,18 @@
   </div>
 </div>
 
-<!-- ============ KAPITOLOVÝ RAIL ============ -->
-<nav class="chapters" aria-label="Kapitoly plavby">
+<nav class="chapters" aria-label="Sekce stránky">
   <ol>
-    <li><a href="#nalodeni" data-num="I"><span>Nalodění</span></a></li>
-    <li><a href="#plavby" data-num="II"><span>Nabídka plaveb</span></a></li>
-    <li><a href="#trasa" data-num="III"><span>Trasa</span></a></li>
-    <li><a href="#paluba" data-num="IV"><span>Na palubě</span></a></li>
-    <li><a href="#pronajem" data-num="V"><span>Pronájem</span></a></li>
-    <li><a href="#galerie" data-num="VI"><span>Galerie</span></a></li>
-    <li><a href="#kontakt" data-num="VII"><span>Rezervace</span></a></li>
+    <li><a href="#nalodeni"><span>Nalodění</span></a></li>
+    <li><a href="#plavby"><span>Nabídka plaveb</span></a></li>
+    <li><a href="#trasa"><span>Trasa</span></a></li>
+    <li><a href="#dal"><span>Kam dál</span></a></li>
   </ol>
 </nav>
 
-<!-- ============ MŮSTEK / NAVIGACE ============ -->
 <header class="bridge" id="bridge">
   <div class="bridge__inner">
-    <a class="brand" href="#nalodeni" aria-label="Parník Praha — úvod">
+    <a class="brand" href="index.html" aria-label="Parník Praha, úvodní stránka">
       <svg class="brand__mark" viewBox="0 0 48 32" width="48" height="32" aria-hidden="true">
         <path d="M2 22h44l-5 8H7z" fill="currentColor"/>
         <path d="M10 12h26v9H10z" fill="currentColor" opacity=".85"/>
@@ -63,19 +54,16 @@
         <circle cx="22" cy="16.5" r="1.6" fill="#08171F"/>
         <circle cx="29" cy="16.5" r="1.6" fill="#08171F"/>
       </svg>
-      <span class="brand__text">
-        <strong>Parník</strong>
-        <em>Praha</em>
-      </span>
+      <span class="brand__text"><strong>Parník</strong><em>Praha</em></span>
     </a>
 
     <nav class="bridge__nav" aria-label="Hlavní navigace">
-      <a href="#plavby">Plavby</a>
-      <a href="#trasa">Trasa</a>
-      <a href="#paluba">Na palubě</a>
-      <a href="#pronajem">Pronájem</a>
-      <a href="#certifikat">Certifikáty</a>
-      <a href="#galerie">Galerie</a>
+      <a href="index.html#plavby">Plavby</a>
+      <a href="index.html#trasa">Trasa</a>
+      <a href="na-palube.html">Na palubě</a>
+      <a href="pronajem.html">Pronájem</a>
+      <a href="certifikaty.html">Certifikáty</a>
+      <a href="galerie.html">Galerie</a>
     </nav>
 
     <div class="bridge__actions">
@@ -85,7 +73,7 @@
         </svg>
         <span>604 69 69 69</span>
       </a>
-      <a class="btn btn--brass btn--sm" href="#kontakt">Rezervovat</a>
+      <a class="btn btn--brass btn--sm" href="kontakt.html">Rezervovat</a>
       <button class="burger" type="button" aria-label="Otevřít menu" aria-expanded="false" aria-controls="menu">
         <span></span><span></span><span></span>
       </button>
@@ -94,18 +82,17 @@
   <div class="bridge__rivets" aria-hidden="true"></div>
 </header>
 
-<!-- ============ MOBILNÍ MENU ============ -->
 <div class="menu" id="menu" hidden>
   <div class="menu__panel">
     <p class="eyebrow">Deck plan</p>
     <nav aria-label="Mobilní navigace">
-      <a href="#plavby"><i>I</i> Nabídka plaveb</a>
-      <a href="#trasa"><i>II</i> Trasa plavby</a>
-      <a href="#paluba"><i>III</i> Na palubě</a>
-      <a href="#pronajem"><i>IV</i> Pronájem lodí</a>
-      <a href="#certifikat"><i>V</i> Dárkové certifikáty</a>
-      <a href="#galerie"><i>VI</i> Galerie</a>
-      <a href="#kontakt"><i>VII</i> Rezervace a kontakt</a>
+      <a href="index.html#plavby">Nabídka plaveb</a>
+      <a href="index.html#trasa">Trasa plavby</a>
+      <a href="na-palube.html">Na palubě</a>
+      <a href="pronajem.html">Pronájem lodí</a>
+      <a href="certifikaty.html">Dárkové certifikáty</a>
+      <a href="galerie.html">Galerie</a>
+      <a href="kontakt.html">Rezervace a kontakt</a>
     </nav>
     <div class="menu__foot">
       <a href="tel:+420604696969">+420 604 696 969</a>
@@ -117,9 +104,6 @@
 
 <main id="obsah">
 
-<!-- ============================================================
-     I. NALODĚNÍ — HERO
-     ============================================================ -->
 <section class="hero" id="nalodeni">
   <div class="hero__photo" aria-hidden="true">
     <img src="https://images.unsplash.com/photo-1519677100203-a0e668c92439?auto=format&fit=crop&w=2000&q=70"
@@ -127,7 +111,6 @@
   </div>
   <div class="hero__wash" aria-hidden="true"></div>
 
-  <!-- parallaxové vrstvy -->
   <div class="hero__layer hero__layer--far" data-depth="0.12" aria-hidden="true">
     <svg viewBox="0 0 1600 300" preserveAspectRatio="none">
       <path d="M0 300V190l70-22 60 16 90-40 80 24 110-52 90 34 120-46 100 30 130-56 90 40 120-34 100 26 140-44 100 32V300z" fill="currentColor"/>
@@ -142,43 +125,49 @@
     </h1>
     <p class="hero__lead reveal">
       Vyhlídkové plavby, obědy a večeře na palubě parníku. Historické i moderní lodě,
-      pravidelné odjezdy každý den — za každého počasí, po celý rok.
+      pravidelné odjezdy každý den, za každého počasí, po celý rok.
     </p>
     <div class="hero__cta reveal">
-      <a class="btn btn--brass" href="#kontakt">
+      <a class="btn btn--brass" href="kontakt.html">
         Rezervovat plavbu
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
-      <a class="btn btn--ghost" href="#poptavka">Nezávazná poptávka</a>
+      <a class="btn btn--ghost btn--light" href="index.html#plavby">Nabídka plaveb</a>
     </div>
 
     <dl class="hero__facts reveal">
       <div><dt>Vyhlídková plavba</dt><dd>60 minut</dd></div>
-      <div><dt>Odjezdy</dt><dd>11–21 h</dd></div>
+      <div><dt>Odjezdy</dt><dd>11 až 21 h</dd></div>
       <div><dt>Nalodění</dt><dd>Dvořákovo nábřeží</dd></div>
     </dl>
   </div>
 
-  <!-- popředí: zábradlí paluby -->
-  <div class="hero__deck sway" aria-hidden="true">
-    <svg viewBox="0 0 1600 220" preserveAspectRatio="none">
-      <rect x="0" y="150" width="1600" height="70" fill="#0b1d26"/>
-      <rect x="0" y="140" width="1600" height="12" fill="#123A49"/>
-      <rect x="0" y="96" width="1600" height="7" rx="3" fill="#C9A227" opacity=".9"/>
-      <rect x="0" y="124" width="1600" height="4" rx="2" fill="#C9A227" opacity=".55"/>
-      <g fill="#C9A227" opacity=".75">
-        <rect x="60"  y="100" width="6" height="44"/><rect x="220" y="100" width="6" height="44"/>
-        <rect x="380" y="100" width="6" height="44"/><rect x="540" y="100" width="6" height="44"/>
-        <rect x="700" y="100" width="6" height="44"/><rect x="860" y="100" width="6" height="44"/>
-        <rect x="1020" y="100" width="6" height="44"/><rect x="1180" y="100" width="6" height="44"/>
-        <rect x="1340" y="100" width="6" height="44"/><rect x="1500" y="100" width="6" height="44"/>
-      </g>
-    </svg>
+  <div class="waves waves--hero" aria-hidden="true">
+    <svg class="waves__a" viewBox="0 0 2880 120" preserveAspectRatio="none"><path d="M0 62c120-38 240-38 360 0s240 38 360 0 240-38 360 0 240 38 360 0 240-38 360 0 240 38 360 0 240-38 360 0 240 38 360 0V120H0Z"/></svg>
+    <svg class="waves__b" viewBox="0 0 2880 120" preserveAspectRatio="none"><path d="M0 80c80-26 160-26 240 0s160 26 240 0 160-26 240 0 160 26 240 0 160-26 240 0 160 26 240 0 160-26 240 0 160 26 240 0 160-26 240 0 160 26 240 0 160-26 240 0 160 26 240 0V120H0Z"/></svg>
   </div>
 
-  <div class="waves waves--hero" aria-hidden="true">
-    <svg class="waves__l" viewBox="0 0 1440 120" preserveAspectRatio="none"><use href="#wave-a"/></svg>
-    <svg class="waves__m" viewBox="0 0 1440 120" preserveAspectRatio="none"><use href="#wave-b"/></svg>
+  <div class="hero__deck sway" aria-hidden="true">
+    <svg viewBox="0 0 1600 200" preserveAspectRatio="none">
+      <rect x="0" y="112" width="1600" height="88" fill="#091b24"/>
+      <rect x="0" y="104" width="1600" height="12" fill="#7A4B2A"/>
+      <rect x="0" y="100" width="1600" height="4" fill="#9A6238" opacity=".8"/>
+      <g fill="#C9A227">
+        <rect x="46"   y="44" width="7" height="60" opacity=".8"/>
+        <rect x="206"  y="44" width="7" height="60" opacity=".8"/>
+        <rect x="366"  y="44" width="7" height="60" opacity=".8"/>
+        <rect x="526"  y="44" width="7" height="60" opacity=".8"/>
+        <rect x="686"  y="44" width="7" height="60" opacity=".8"/>
+        <rect x="846"  y="44" width="7" height="60" opacity=".8"/>
+        <rect x="1006" y="44" width="7" height="60" opacity=".8"/>
+        <rect x="1166" y="44" width="7" height="60" opacity=".8"/>
+        <rect x="1326" y="44" width="7" height="60" opacity=".8"/>
+        <rect x="1486" y="44" width="7" height="60" opacity=".8"/>
+      </g>
+      <rect x="0" y="72" width="1600" height="5" fill="#C9A227" opacity=".55"/>
+      <rect x="0" y="38" width="1600" height="9" rx="4.5" fill="#C9A227"/>
+      <rect x="0" y="38" width="1600" height="3" rx="1.5" fill="#EBD292" opacity=".9"/>
+    </svg>
   </div>
 
   <a class="scrollcue" href="#plavby">
@@ -187,7 +176,6 @@
   </a>
 </section>
 
-<!-- ============ MOSAZNÁ LIŠTA / TICKER ============ -->
 <div class="ticker" aria-hidden="true">
   <div class="ticker__track">
     <span>365 dní v roce</span><i>&#9679;</i>
@@ -203,16 +191,13 @@
   </div>
 </div>
 
-<!-- ============================================================
-     II. NABÍDKA PLAVEB — LODNÍ LÍSTKY
-     ============================================================ -->
 <section class="section section--day" id="plavby">
   <div class="wrap">
     <header class="shead">
-      <p class="eyebrow reveal"><i>Kapitola II</i> Nabídka plaveb</p>
+      <p class="eyebrow reveal">Nabídka plaveb</p>
       <h2 class="reveal">Vyberte si svůj lodní lístek</h2>
       <p class="shead__lead reveal">
-        Pravidelné plavby vyplouvají každý den. Stačí si vybrat denní dobu —
+        Pravidelné plavby vyplouvají každý den. Stačí si vybrat denní dobu,
         o zbytek se postaráme my.
       </p>
     </header>
@@ -231,7 +216,7 @@
           <span class="lbl">Odjezdy</span>
           <ul><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li></ul>
         </div>
-        <a class="ticket__link" href="#kontakt">Rezervovat <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="ticket__link" href="kontakt.html">Rezervovat <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </article>
 
       <article class="ticket reveal">
@@ -246,13 +231,13 @@
           <span class="lbl">Odjezdy</span>
           <ul><li>11</li><li>12</li><li>13</li><li>14</li></ul>
         </div>
-        <a class="ticket__link" href="#kontakt">Rezervovat <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="ticket__link" href="kontakt.html">Rezervovat <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </article>
 
       <article class="ticket ticket--feature reveal">
         <div class="ticket__top">
           <span class="ticket__kind">S večeří</span>
-          <span class="ticket__dur">2–3 h</span>
+          <span class="ticket__dur">2 až 3 h</span>
         </div>
         <h3>Plavby s večeří</h3>
         <p>Rautová večeře na palubě parníku a noční Praha, která se zrcadlí ve Vltavě.</p>
@@ -261,7 +246,7 @@
           <span class="lbl">Odjezdy</span>
           <ul><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li></ul>
         </div>
-        <a class="ticket__link" href="#kontakt">Rezervovat <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="ticket__link" href="kontakt.html">Rezervovat <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </article>
 
       <article class="ticket reveal">
@@ -270,13 +255,13 @@
           <span class="ticket__dur">31. 12.</span>
         </div>
         <h3>Silvestrovská plavba</h3>
-        <p>Netradiční zážitek — silvestrovská plavba s hudbou a bohatým rautem.</p>
+        <p>Netradiční zážitek, silvestrovská plavba s hudbou a bohatým rautem.</p>
         <div class="ticket__perf" aria-hidden="true"></div>
         <div class="ticket__times">
           <span class="lbl">Odjezdy</span>
           <ul><li>13</li><li>16</li><li>19:30</li></ul>
         </div>
-        <a class="ticket__link" href="#kontakt">Rezervovat <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="ticket__link" href="kontakt.html">Rezervovat <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </article>
 
       <article class="ticket reveal">
@@ -291,7 +276,7 @@
           <span class="lbl">Odjezd</span>
           <ul><li>čas je na vás</li></ul>
         </div>
-        <a class="ticket__link" href="#pronajem">Zjistit více <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="ticket__link" href="pronajem.html">Zjistit více <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </article>
 
       <article class="ticket reveal">
@@ -306,7 +291,7 @@
           <span class="lbl">Platí na</span>
           <ul><li>11</li><li>12</li><li>13</li><li>14</li></ul>
         </div>
-        <a class="ticket__link" href="#certifikat">Zjistit více <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="ticket__link" href="certifikaty.html">Zjistit více <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </article>
 
     </div>
@@ -314,18 +299,15 @@
     <p class="note reveal">
       Máte zájem a chcete vědět více? Zavolejte nám na
       <a href="tel:+420773903903">+420 773 903 903</a> nebo použijte
-      <a href="#poptavka">nezávazný poptávkový formulář</a>.
+      <a href="kontakt.html">nezávazný poptávkový formulář</a>.
     </p>
   </div>
 </section>
 
-<!-- ============================================================
-     III. TRASA PLAVBY — HORIZONTÁLNÍ PANORAMA
-     ============================================================ -->
-<section class="route" id="trasa" aria-label="Trasa plavby">
+<section class="route cut--cream" id="trasa" aria-label="Trasa plavby">
   <div class="route__sticky">
     <div class="route__head">
-      <p class="eyebrow eyebrow--light"><i>Kapitola III</i> Trasa plavby</p>
+      <p class="eyebrow eyebrow--light">Trasa plavby</p>
       <h2>Šedesát minut, osm století</h2>
     </div>
 
@@ -348,11 +330,9 @@
           <circle cx="900" cy="150" r="46" fill="#EBD292" opacity=".22"/>
           <circle cx="900" cy="150" r="22" fill="#EBD292" opacity=".5"/>
 
-          <!-- vzdálené kopce -->
           <path d="M0 600V520l180-46 220 30 190-52 240 42 210-58 260 46 230-40 250 52 220-46 260 40 240-54 250 46 230-38 260 50 220-42 240 48 200-34v220z"
                 fill="#0d2c3a" opacity=".8"/>
 
-          <!-- ČECHŮV MOST -->
           <g fill="#0a2029">
             <path fill-rule="evenodd" d="M190 502h520v98H190z
               M220 600a65 55 0 0 1 130 0z
@@ -364,21 +344,16 @@
             <rect x="690" y="452" width="12" height="50"/><path d="M690 452l6-16 6 16z"/>
           </g>
 
-          <!-- PRAŽSKÝ HRAD + KATEDRÁLA SV. VÍTA -->
           <g fill="#0a2029">
             <path d="M880 600l90-118 700-8 100 126z"/>
             <rect x="980" y="470" width="660" height="70"/>
             <rect x="980" y="452" width="660" height="20"/>
-            <!-- katedrála: loď -->
             <rect x="1178" y="356" width="176" height="116"/>
             <path d="M1178 356l88-42 88 42z"/>
-            <!-- západní věže -->
             <rect x="1186" y="248" width="34" height="112"/><path d="M1186 248l17-52 17 52z"/>
             <rect x="1312" y="248" width="34" height="112"/><path d="M1312 248l17-52 17 52z"/>
-            <!-- velká jižní věž -->
             <rect x="1372" y="286" width="48" height="186"/>
             <path d="M1372 286l24-34 24 34z"/><rect x="1392" y="228" width="8" height="26"/>
-            <!-- okna -->
             <g fill="#EBD292" opacity=".35">
               <rect x="1010" y="486" width="10" height="18"/><rect x="1046" y="486" width="10" height="18"/>
               <rect x="1082" y="486" width="10" height="18"/><rect x="1118" y="486" width="10" height="18"/>
@@ -387,7 +362,6 @@
             </g>
           </g>
 
-          <!-- PETŘÍNSKÁ ROZHLEDNA -->
           <g fill="#0a2029">
             <path d="M1700 600l120-104 130 104z"/>
             <path d="M1836 496l16 0 10-140h-36z"/>
@@ -397,7 +371,6 @@
             <rect x="1832" y="392" width="44" height="6"/>
           </g>
 
-          <!-- KARLŮV MOST -->
           <g fill="#08171F">
             <path fill-rule="evenodd" d="M2040 498h790v102h-790z
               M2126 600a48 62 0 0 1 96 0z
@@ -405,17 +378,14 @@
               M2366 600a48 62 0 0 1 96 0z
               M2486 600a48 62 0 0 1 96 0z
               M2606 600a48 62 0 0 1 96 0z"/>
-            <!-- Staroměstská věž -->
             <rect x="2044" y="300" width="72" height="200"/>
             <path d="M2044 300l36-56 36 56z"/>
             <rect x="2040" y="286" width="8" height="24"/><rect x="2112" y="286" width="8" height="24"/>
             <rect x="2076" y="212" width="8" height="34"/>
-            <!-- Malostranské věže -->
             <rect x="2712" y="330" width="60" height="170"/>
             <path d="M2712 330l30-52 30 52z"/>
             <rect x="2784" y="392" width="42" height="108"/>
             <path d="M2784 392l21-38 21 38z"/>
-            <!-- sochy na mostě -->
             <g opacity=".9">
               <rect x="2180" y="474" width="9" height="26"/><rect x="2300" y="474" width="9" height="26"/>
               <rect x="2420" y="474" width="9" height="26"/><rect x="2540" y="474" width="9" height="26"/>
@@ -423,7 +393,6 @@
             </g>
           </g>
 
-          <!-- NÁRODNÍ DIVADLO -->
           <g fill="#0a2029">
             <rect x="2980" y="436" width="330" height="164"/>
             <rect x="3024" y="400" width="242" height="38"/>
@@ -438,7 +407,6 @@
             </g>
           </g>
 
-          <!-- TANČÍCÍ DŮM -->
           <g fill="#0a2029">
             <rect x="3560" y="404" width="118" height="196"/>
             <rect x="3560" y="386" width="128" height="20"/>
@@ -451,7 +419,6 @@
             </g>
           </g>
 
-          <!-- VYŠEHRAD -->
           <g fill="#08171F">
             <path d="M4020 600l140-142 420-10 120 152z"/>
             <rect x="4180" y="392" width="330" height="72"/>
@@ -464,7 +431,6 @@
             </g>
           </g>
 
-          <!-- voda -->
           <rect y="598" width="4800" height="102" fill="url(#panoNear)"/>
           <g fill="#EBD292" opacity=".08">
             <rect x="1290" y="600" width="6" height="90"/><rect x="2078" y="600" width="6" height="90"/>
@@ -473,7 +439,6 @@
         </svg>
       </div>
 
-      <!-- loď -->
       <div class="route__boat" aria-hidden="true">
         <div class="route__wake"></div>
         <svg viewBox="0 0 200 110" width="200" height="110">
@@ -493,7 +458,6 @@
         </svg>
       </div>
 
-      <!-- zastávky -->
       <ol class="route__stops">
         <li data-at="0.02"><b>Dvořákovo nábřeží</b><span>Nalodění</span></li>
         <li data-at="0.13"><b>Čechův most</b><span>Secesní most z roku 1908</span></li>
@@ -507,11 +471,10 @@
 
     <div class="route__bar">
       <div class="route__prog"><span></span></div>
-      <p class="route__hint">Posouvejte stránku &mdash; loď pluje s vámi</p>
+      <p class="route__hint">Posouvejte stránku, loď pluje s vámi</p>
     </div>
   </div>
 
-  <!-- mobilní alternativa: vertikální timeline -->
   <ol class="route__mobile">
     <li><b>Dvořákovo nábřeží</b><span>Nalodění</span></li>
     <li><b>Čechův most</b><span>Secesní most z roku 1908</span></li>
@@ -523,317 +486,104 @@
   </ol>
 </section>
 
-<!-- ============================================================
-     IV. NA PALUBĚ
-     ============================================================ -->
-<section class="section section--dusk" id="paluba">
+<section class="section section--light cut--night" id="dal">
   <div class="wrap">
-    <header class="shead shead--light">
-      <p class="eyebrow eyebrow--light reveal"><i>Kapitola IV</i> Na palubě</p>
-      <h2 class="reveal">Tři paluby, jedna řeka</h2>
-      <p class="shead__lead reveal">
-        Prosklený salon pro chladné dny, otevřená horní paluba pro ty teplé
-        a bar, který nezavírá dřív než vy.
-      </p>
+    <header class="shead">
+      <p class="eyebrow reveal">Kam dál</p>
+      <h2 class="reveal">Co všechno na palubě zvládneme</h2>
     </header>
 
-    <div class="decks">
-      <figure class="deckcard deckcard--wide reveal">
-        <img src="https://images.unsplash.com/photo-1560624052-449f5ddf0c31?auto=format&fit=crop&w=1200&q=70"
-             alt="Prosklený salon lodi s dřevěným interiérem a prostřenými stoly" loading="lazy" width="1200" height="800">
-        <figcaption>
-          <h3>Salon</h3>
-          <p>Vytápěný prosklený prostor s výhledem na obě nábřeží. Stolová i rautová úprava.</p>
-        </figcaption>
-      </figure>
+    <div class="nextcards">
+      <a class="nextcard reveal" href="na-palube.html">
+        <span class="nextcard__img">
+          <img src="https://images.unsplash.com/photo-1560624052-449f5ddf0c31?auto=format&fit=crop&w=800&q=70"
+               alt="Prosklený salon lodi s dřevěným interiérem" loading="lazy" width="800" height="533">
+        </span>
+        <span class="nextcard__body">
+          <span class="nextcard__title">Na palubě</span>
+          <span class="nextcard__text">Salon, horní paluba, bar a kuchyně. Podívejte se, kde budete sedět.</span>
+          <span class="nextcard__go">Prohlédnout paluby
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </span>
+      </a>
 
-      <figure class="deckcard reveal">
-        <div class="porthole">
+      <a class="nextcard reveal" href="pronajem.html">
+        <span class="nextcard__img">
+          <img src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=800&q=70"
+               alt="Přípitek hostů během soukromé akce" loading="lazy" width="800" height="533">
+        </span>
+        <span class="nextcard__body">
+          <span class="nextcard__title">Pronájem lodí</span>
+          <span class="nextcard__text">Celá loď jen pro vás. Firemní akce, svatby, oslavy i grilování.</span>
+          <span class="nextcard__go">Zjistit podmínky
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </span>
+      </a>
+
+      <a class="nextcard reveal" href="certifikaty.html">
+        <span class="nextcard__img">
           <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=800&q=70"
-               alt="Servírovaný chod na talíři během večeře na lodi" loading="lazy" width="800" height="800">
-        </div>
-        <figcaption>
-          <h3>Kuchyně</h3>
-          <p>Obědová menu i rautové večeře připravované na palubě.</p>
-        </figcaption>
-      </figure>
+               alt="Servírovaný chod během večeře na lodi" loading="lazy" width="800" height="533">
+        </span>
+        <span class="nextcard__body">
+          <span class="nextcard__title">Dárkové certifikáty</span>
+          <span class="nextcard__text">Plavba s obědem nebo večeří jako dárek. Platnost 12 měsíců.</span>
+          <span class="nextcard__go">Objednat certifikát
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </span>
+      </a>
 
-      <figure class="deckcard reveal">
-        <div class="porthole">
-          <img src="https://images.unsplash.com/photo-1543007630-9710e4a00a20?auto=format&fit=crop&w=800&q=70"
-               alt="Barový pult s teplým osvětlením" loading="lazy" width="800" height="800">
-        </div>
-        <figcaption>
-          <h3>Bar</h3>
-          <p>Nápojový lístek, míchané drinky a káva po celou dobu plavby.</p>
-        </figcaption>
-      </figure>
-
-      <figure class="deckcard deckcard--tall reveal">
-        <img src="https://images.unsplash.com/photo-1592906209472-a36b1f3782ef?auto=format&fit=crop&w=900&q=70"
-             alt="Loď na Vltavě pod Karlovým mostem" loading="lazy" width="900" height="1200">
-        <figcaption>
-          <h3>Horní paluba</h3>
-          <p>Otevřený prostor pro fotky, které z břehu neuděláte.</p>
-        </figcaption>
-      </figure>
-
-      <div class="deckcard deckcard--quote reveal">
-        <blockquote>
-          <p>Vyplujte s námi na moderních i historických lodích. Plavba po Vltavě
-             365 dní v roce.</p>
-        </blockquote>
-        <div class="compass" aria-hidden="true">
-          <svg viewBox="0 0 100 100" width="76" height="76" fill="none" stroke="currentColor">
-            <circle cx="50" cy="50" r="44" stroke-width="1.5" opacity=".5"/>
-            <circle cx="50" cy="50" r="34" stroke-width="1" opacity=".3"/>
-            <path d="M50 12v10M50 78v10M12 50h10M78 50h10" stroke-width="1.5"/>
-            <path d="M50 20l9 28 28 9-28 9-9 28-9-28-28-9 28-9z" fill="currentColor" stroke="none" opacity=".9"/>
-          </svg>
-        </div>
-      </div>
+      <a class="nextcard reveal" href="galerie.html">
+        <span class="nextcard__img">
+          <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=800&q=70"
+               alt="Slavnostně prostřená tabule na palubě" loading="lazy" width="800" height="533">
+        </span>
+        <span class="nextcard__body">
+          <span class="nextcard__title">Galerie</span>
+          <span class="nextcard__text">Oslavy, svatby a večírky, které u nás na lodi proběhly.</span>
+          <span class="nextcard__go">Otevřít galerii
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </span>
+      </a>
     </div>
   </div>
 </section>
 
-<!-- ============================================================
-     V. PRONÁJEM LODÍ
-     ============================================================ -->
-<section class="section section--night" id="pronajem">
-  <div class="wrap">
-    <div class="charter">
-      <div class="charter__copy">
-        <p class="eyebrow eyebrow--light reveal"><i>Kapitola V</i> Pronájem lodí</p>
-        <h2 class="reveal">Celá loď.<br>Celý večer.<br><em>Váš scénář.</em></h2>
-        <p class="reveal">
-          Firemní akce, tiskové konference, školení, promoce, narozeninové oslavy,
-          svatby, party i grilování na palubě. Čas odjezdu, trasa i program jsou na vás —
-          my zajistíme loď, posádku, catering i techniku.
-        </p>
-        <ul class="chips reveal">
-          <li>Firemní akce</li><li>Tiskové konference</li><li>Školení</li>
-          <li>Promoce</li><li>Svatby</li><li>Narozeniny</li>
-          <li>Rauty &amp; koktejly</li><li>Grilování</li>
-        </ul>
-        <a class="btn btn--brass reveal" href="#poptavka">
-          Nezávazná kalkulace
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </a>
-      </div>
-
-      <div class="charter__media reveal">
-        <img src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=1000&q=70"
-             alt="Přípitek hostů během soukromé akce na lodi" loading="lazy" width="1000" height="667">
-        <div class="charter__plate">
-          <span>Kapacita</span>
-          <strong>až 300</strong>
-          <span>hostů</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="fleet reveal">
-      <table>
-        <caption>Orientační přehled lodí a kapacit</caption>
-        <thead>
-          <tr><th scope="col">Loď</th><th scope="col">Typ</th><th scope="col">Kapacita</th><th scope="col">Vhodné pro</th></tr>
-        </thead>
-        <tbody>
-          <tr><th scope="row">Historický parník</th><td>Salon + horní paluba</td><td>do&nbsp;120</td><td>svatby, výročí, rauty</td></tr>
-          <tr><th scope="row">Salonní loď</th><td>Prosklený salon</td><td>do&nbsp;200</td><td>firemní akce, konference</td></tr>
-          <tr><th scope="row">Velká výletní loď</th><td>Dvě paluby</td><td>do&nbsp;300</td><td>party, večírky, koncerty</td></tr>
-          <tr><th scope="row">Malá loď</th><td>Jedna paluba</td><td>do&nbsp;50</td><td>oslavy, uzavřené skupiny</td></tr>
-        </tbody>
-      </table>
-      <p class="fleet__note">Přesnou kapacitu a dostupnost potvrdíme podle termínu — napište nám do poptávky.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     VI. DÁRKOVÝ CERTIFIKÁT
-     ============================================================ -->
-<section class="section section--night section--tight" id="certifikat">
-  <div class="wrap gift">
-    <div class="gift__copy">
-      <p class="eyebrow eyebrow--light reveal">Dárkové certifikáty</p>
-      <h2 class="reveal">Dárek, který se nedá zabalit špatně</h2>
-      <p class="reveal">
-        Obdarujte přátele plavbou parníkem s obědem nebo večeří. Certifikát vystavíme
-        na jméno i na konkrétní termín — nebo ho necháme otevřený a datum si obdarovaný
-        vybere sám.
-      </p>
-      <a class="btn btn--ghost btn--light reveal" href="#poptavka">Objednat certifikát</a>
-    </div>
-
-    <div class="cert reveal" aria-label="Ukázka dárkového certifikátu">
-      <div class="cert__inner">
-        <div class="cert__deco" aria-hidden="true"></div>
-        <p class="cert__eyebrow">Parník Praha</p>
-        <p class="cert__title">Dárkový<br>certifikát</p>
-        <p class="cert__sub">Plavba po Vltavě s večeří pro dvě osoby</p>
-        <div class="cert__row">
-          <span>Platnost</span><b>12 měsíců</b>
-        </div>
-        <div class="cert__row">
-          <span>Nalodění</span><b>Dvořákovo nábřeží</b>
-        </div>
-        <div class="cert__seal" aria-hidden="true">
-          <svg viewBox="0 0 100 100" width="58" height="58">
-            <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="2"/>
-            <circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="1" opacity=".6"/>
-            <path d="M28 58h44l-6 10H34z" fill="currentColor"/>
-            <rect x="36" y="46" width="28" height="11" fill="currentColor" opacity=".9"/>
-            <rect x="48" y="34" width="4" height="12" fill="currentColor"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     VII. GALERIE
-     ============================================================ -->
-<section class="section section--night" id="galerie">
-  <div class="wrap">
-    <header class="shead shead--light">
-      <p class="eyebrow eyebrow--light reveal"><i>Kapitola VI</i> Galerie</p>
-      <h2 class="reveal">Oslava na lodi</h2>
-    </header>
-
-    <div class="gallery">
-      <figure class="reveal"><img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=900&q=70" alt="Slavnostně prostřená tabule na palubě" loading="lazy" width="900" height="600"></figure>
-      <figure class="reveal"><img src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=900&q=70" alt="Květinová výzdoba na svatbě" loading="lazy" width="900" height="600"></figure>
-      <figure class="reveal"><img src="https://images.unsplash.com/photo-1600623471616-8c1966c91ff6?auto=format&fit=crop&w=900&q=70" alt="Pražský hrad a Karlův most za soumraku" loading="lazy" width="900" height="600"></figure>
-      <figure class="reveal"><img src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=900&q=70" alt="Silvestrovská oslava s konfetami" loading="lazy" width="900" height="600"></figure>
-      <figure class="reveal"><img src="https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=900&q=70" alt="Pohled na pražské střechy z Vltavy" loading="lazy" width="900" height="600"></figure>
-      <figure class="reveal"><img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=900&q=70" alt="Příprava jídla v lodní kuchyni" loading="lazy" width="900" height="600"></figure>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     VIII. REZERVACE / POPTÁVKA
-     ============================================================ -->
-<section class="section section--night booking" id="kontakt">
-  <div class="wrap">
-    <header class="shead shead--light">
-      <p class="eyebrow eyebrow--light reveal"><i>Kapitola VII</i> Rezervace</p>
+<section class="ctaband cut--white">
+  <div class="wrap ctaband__inner">
+    <div>
+      <p class="eyebrow eyebrow--light reveal">Rezervace</p>
       <h2 class="reveal">Napište nám, kdy vyplouváte</h2>
-    </header>
-
-    <div class="booking__grid">
-      <form class="form" id="poptavka" novalidate>
-        <div class="row">
-          <div class="field">
-            <label for="jmeno">Jméno a příjmení <span aria-hidden="true">*</span></label>
-            <input id="jmeno" name="jmeno" type="text" autocomplete="name" required>
-            <p class="err" data-err-for="jmeno" aria-live="polite"></p>
-          </div>
-          <div class="field">
-            <label for="email">E-mail <span aria-hidden="true">*</span></label>
-            <input id="email" name="email" type="email" autocomplete="email" required>
-            <p class="err" data-err-for="email" aria-live="polite"></p>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="field">
-            <label for="telefon">Telefon</label>
-            <input id="telefon" name="telefon" type="tel" autocomplete="tel" inputmode="tel" placeholder="+420">
-            <p class="err" data-err-for="telefon" aria-live="polite"></p>
-          </div>
-          <div class="field">
-            <label for="typ">Typ plavby <span aria-hidden="true">*</span></label>
-            <select id="typ" name="typ" required>
-              <option value="">Vyberte…</option>
-              <option>Vyhlídková plavba</option>
-              <option>Plavba s obědem</option>
-              <option>Plavba s večeří</option>
-              <option>Silvestrovská plavba</option>
-              <option>Pronájem lodi</option>
-              <option>Dárkový certifikát</option>
-            </select>
-            <p class="err" data-err-for="typ" aria-live="polite"></p>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="field">
-            <label for="datum">Termín</label>
-            <input id="datum" name="datum" type="date">
-            <p class="err" data-err-for="datum" aria-live="polite"></p>
-          </div>
-          <div class="field">
-            <label for="osoby">Počet osob</label>
-            <input id="osoby" name="osoby" type="number" min="1" max="300" step="1" inputmode="numeric" placeholder="2">
-            <p class="err" data-err-for="osoby" aria-live="polite"></p>
-          </div>
-        </div>
-
-        <div class="field">
-          <label for="zprava">Zpráva</label>
-          <textarea id="zprava" name="zprava" rows="4" placeholder="Napište nám, co si představujete — catering, hudba, výzdoba…"></textarea>
-        </div>
-
-        <div class="field field--check">
-          <input id="souhlas" name="souhlas" type="checkbox" required>
-          <label for="souhlas">Souhlasím se zpracováním osobních údajů za účelem vyřízení poptávky. <span aria-hidden="true">*</span></label>
-          <p class="err" data-err-for="souhlas" aria-live="polite"></p>
-        </div>
-
-        <button class="btn btn--brass btn--block" type="submit">
-          Odeslat nezávaznou poptávku
-        </button>
-        <p class="form__status" role="status" aria-live="polite"></p>
-      </form>
-
-      <aside class="contactcard">
-        <h3>Parníky v Praze</h3>
-        <p class="contactcard__lead">Rádi vám poradíme s výběrem lodi i termínu.</p>
-
-        <a class="contactcard__row" href="tel:+420604696969">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
-          <span><b>+420 604 696 969</b><em>Rezervace a informace</em></span>
-        </a>
-
-        <a class="contactcard__row" href="tel:+420773903903">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
-          <span><b>+420 773 903 903</b><em>Pronájem lodí</em></span>
-        </a>
-
-        <a class="contactcard__row" href="mailto:info@parnik.cz">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
-          <span><b>info@parnik.cz</b><em>Napište kdykoliv</em></span>
-        </a>
-
-        <div class="contactcard__row contactcard__row--static">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span><b>Dvořákovo nábřeží</b><em>Praha 1 — místo nalodění</em></span>
-        </div>
-
-        <div class="contactcard__hours">
-          <p><b>Provoz</b> 365 dní v roce</p>
-          <p><b>Odjezdy</b> 11:00 — 21:00</p>
-        </div>
-      </aside>
+      <p class="ctaband__lead reveal">
+        Poradíme s výběrem lodi i termínu. Odpovídáme do 24 hodin,
+        nejpozději následující pracovní den.
+      </p>
+    </div>
+    <div class="ctaband__actions reveal">
+      <a class="btn btn--brass" href="kontakt.html">
+        Nezávazná poptávka
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a class="btn btn--ghost btn--light" href="tel:+420604696969">+420 604 696 969</a>
     </div>
   </div>
 </section>
 
 </main>
 
-<!-- ============ FOOTER ============ -->
 <footer class="footer">
   <div class="waves waves--footer" aria-hidden="true">
-    <svg class="waves__l" viewBox="0 0 1440 120" preserveAspectRatio="none"><use href="#wave-a"/></svg>
-    <svg class="waves__m" viewBox="0 0 1440 120" preserveAspectRatio="none"><use href="#wave-b"/></svg>
+    <svg class="waves__a" viewBox="0 0 2880 120" preserveAspectRatio="none"><path d="M0 62c120-38 240-38 360 0s240 38 360 0 240-38 360 0 240 38 360 0 240-38 360 0 240 38 360 0 240-38 360 0 240 38 360 0V120H0Z"/></svg>
+    <svg class="waves__b" viewBox="0 0 2880 120" preserveAspectRatio="none"><path d="M0 80c80-26 160-26 240 0s160 26 240 0 160-26 240 0 160 26 240 0 160-26 240 0 160 26 240 0 160-26 240 0 160 26 240 0 160-26 240 0 160 26 240 0 160-26 240 0 160 26 240 0V120H0Z"/></svg>
   </div>
 
   <div class="wrap footer__inner">
     <div class="footer__brand">
-      <a class="brand brand--lg" href="#nalodeni">
+      <a class="brand brand--lg" href="index.html">
         <svg class="brand__mark" viewBox="0 0 48 32" width="56" height="38" aria-hidden="true">
           <path d="M2 22h44l-5 8H7z" fill="currentColor"/>
           <path d="M10 12h26v9H10z" fill="currentColor" opacity=".85"/>
@@ -849,45 +599,37 @@
     <nav class="footer__nav" aria-label="Mapa webu">
       <div>
         <h4>Plavby</h4>
-        <a href="#plavby">Vyhlídkové plavby</a>
-        <a href="#plavby">Plavby s obědem</a>
-        <a href="#plavby">Plavby s večeří</a>
-        <a href="#plavby">Silvestrovská plavba</a>
+        <a href="index.html#plavby">Vyhlídkové plavby</a>
+        <a href="index.html#plavby">Plavby s obědem</a>
+        <a href="index.html#plavby">Plavby s večeří</a>
+        <a href="index.html#trasa">Trasa plavby</a>
       </div>
       <div>
         <h4>Služby</h4>
-        <a href="#pronajem">Pronájem lodí</a>
-        <a href="#certifikat">Dárkové certifikáty</a>
-        <a href="#poptavka">Nezávazná poptávka</a>
-        <a href="#kontakt">Rezervace</a>
+        <a href="na-palube.html">Na palubě</a>
+        <a href="pronajem.html">Pronájem lodí</a>
+        <a href="certifikaty.html">Dárkové certifikáty</a>
+        <a href="galerie.html">Galerie</a>
       </div>
       <div>
         <h4>Kontakt</h4>
         <a href="tel:+420604696969">+420 604 696 969</a>
         <a href="tel:+420773903903">+420 773 903 903</a>
         <a href="mailto:info@parnik.cz">info@parnik.cz</a>
-        <a href="#galerie">Galerie</a>
+        <a href="kontakt.html">Rezervace</a>
       </div>
     </nav>
   </div>
 
   <div class="footer__bar">
     <div class="wrap footer__barin">
-      <p>&copy; <span id="rok">2026</span> Parník.cz — parníky v Praze</p>
+      <p>&copy; <span id="rok">2026</span> Parník.cz, parníky v Praze</p>
       <p class="footer__langs">
         <a href="#" aria-current="true">CZ</a><a href="#">EN</a><a href="#">DE</a>
       </p>
     </div>
   </div>
 </footer>
-
-<!-- sdílené SVG tvary vln -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <defs>
-    <path id="wave-a" d="M0 60c120-30 240-30 360 0s240 30 360 0 240-30 360 0 240 30 360 0v60H0z"/>
-    <path id="wave-b" d="M0 74c160 26 280-26 400-26s220 44 360 44 260-40 380-40 200 22 300 22v46H0z"/>
-  </defs>
-</svg>
 
 <script src="assets/js/main.js" defer></script>
 </body>

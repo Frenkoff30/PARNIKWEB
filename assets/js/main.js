@@ -1,8 +1,3 @@
-/* =============================================================
-   PARNÍK PRAHA — redesign „PLAVBA"
-   Vanilla JS, bez závislostí.
-   Vše scroll-driven běží v jedné rAF smyčce (jen transform/opacity).
-   ============================================================= */
 (function () {
   'use strict';
 
@@ -13,15 +8,9 @@
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var clamp = function (v, a, b) { return v < a ? a : v > b ? b : v; };
 
-  /* ---------------------------------------------------------
-     1. Rok v patičce
-     --------------------------------------------------------- */
   var rok = $('#rok');
   if (rok) rok.textContent = new Date().getFullYear();
 
-  /* ---------------------------------------------------------
-     2. Reveal on scroll
-     --------------------------------------------------------- */
   var reveals = $$('.reveal');
   if (!('IntersectionObserver' in window) || reduced.matches) {
     reveals.forEach(function (el) { el.classList.add('is-in'); });
@@ -39,9 +28,6 @@
     reveals.forEach(function (el) { revealIO.observe(el); });
   }
 
-  /* ---------------------------------------------------------
-     3. Mobilní menu
-     --------------------------------------------------------- */
   var burger = $('.burger');
   var menu = $('#menu');
   var lastFocus = null;
@@ -74,10 +60,8 @@
       if (e.target === menu || e.target.closest('a')) closeMenu();
     });
     document.addEventListener('keydown', function (e) {
-      if (e.key !== 'Escape' || menu.hidden) return;
-      closeMenu();
+      if (e.key === 'Escape' && !menu.hidden) closeMenu();
     });
-    /* jednoduchý focus trap */
     menu.addEventListener('keydown', function (e) {
       if (e.key !== 'Tab') return;
       var f = $$('a, button', menu);
@@ -88,9 +72,6 @@
     });
   }
 
-  /* ---------------------------------------------------------
-     4. Aktivní kapitola + světlá/tmavá sekce
-     --------------------------------------------------------- */
   var chapterLinks = $$('.chapters a');
   var chaptersNav = $('.chapters');
   var watched = chapterLinks
@@ -106,16 +87,14 @@
           a.classList.toggle('is-active', a.getAttribute('href') === '#' + id);
         });
         if (chaptersNav) {
-          chaptersNav.classList.toggle('on-light', e.target.classList.contains('section--day'));
+          chaptersNav.classList.toggle('on-light',
+            e.target.classList.contains('section--day') || e.target.classList.contains('section--light'));
         }
       });
     }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
     watched.forEach(function (s) { secIO.observe(s); });
   }
 
-  /* ---------------------------------------------------------
-     5. Scroll-driven: lano, můstek, hero parallax, panorama
-     --------------------------------------------------------- */
   var railFill = $('.rail__fill');
   var railBoat = $('.rail__boat');
   var bridge = $('#bridge');
@@ -142,14 +121,10 @@
     var docH = document.documentElement.scrollHeight - window.innerHeight;
     var p = docH > 0 ? clamp(y / docH, 0, 1) : 0;
 
-    /* lano nahoře */
     if (railFill) railFill.style.transform = 'scaleX(' + p + ')';
     if (railBoat) railBoat.style.transform = 'translateX(calc(' + (p * 100) + 'vw - 50%))';
-
-    /* můstek */
     if (bridge) bridge.classList.toggle('is-stuck', y > 40);
 
-    /* hero parallax */
     if (!reduced.matches && y < window.innerHeight * 1.2) {
       heroLayers.forEach(function (el) {
         var d = parseFloat(el.dataset.depth || '0.1');
@@ -157,7 +132,6 @@
       });
     }
 
-    /* panorama trasy */
     if (route && routePan && desktop.matches && !reduced.matches) {
       var top = route.offsetTop;
       var span = route.offsetHeight - window.innerHeight;
@@ -166,7 +140,6 @@
       routePan.style.transform = 'translate3d(' + (-panShift * rp) + 'px,0,0)';
       if (routeProg) routeProg.style.width = (rp * 100) + '%';
 
-      /* aktivní zastávka */
       var idx = 0;
       for (var i = 0; i < routeStops.length; i++) {
         if (parseFloat(routeStops[i].dataset.at) <= rp + 0.04) idx = i;
@@ -190,9 +163,6 @@
   measure();
   onScroll();
 
-  /* ---------------------------------------------------------
-     6. Validace poptávkového formuláře
-     --------------------------------------------------------- */
   var form = $('#poptavka');
   if (form) {
     var status = $('.form__status', form);
@@ -255,28 +225,24 @@
         return;
       }
 
-      /* DEMO: zde se napojí reálný endpoint (POST /api/poptavka).
-         Viz README — sekce „Napojení formuláře". */
       var btn = $('button[type="submit"]', form);
       btn.disabled = true;
       btn.textContent = 'Odesíláme…';
       status.style.color = '';
       status.textContent = '';
 
+      /* TODO: napojit na endpoint, viz README */
       window.setTimeout(function () {
         btn.disabled = false;
         btn.textContent = 'Odeslat nezávaznou poptávku';
         status.style.color = '';
-        status.textContent = 'Děkujeme, poptávku máme. Ozveme se do 24 hodin — nejpozději následující pracovní den.';
+        status.textContent = 'Děkujeme, poptávku máme. Ozveme se do 24 hodin, nejpozději následující pracovní den.';
         form.reset();
         fields.forEach(function (f) { setError(f, ''); });
       }, 900);
     });
   }
 
-  /* ---------------------------------------------------------
-     7. Přepnutí režimu při změně velikosti / motion preference
-     --------------------------------------------------------- */
   function resetRoute() {
     if (!routePan) return;
     if (!desktop.matches || reduced.matches) {

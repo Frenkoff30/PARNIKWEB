@@ -1,121 +1,141 @@
-# Parník Praha — Design System (MASTER)
+# Parník Praha, Design System (MASTER)
 
-> Global Source of Truth. Redesign konceptu **„PLAVBA"** — web sám je plavba po Vltavě.
+> Global Source of Truth. Redesign konceptu **„PLAVBA"**, kde web sám je plavba po Vltavě.
 > Vygenerováno pomocí `ui-ux-pro-max` a kurátorsky upraveno (viz *Odchylky*).
 
 ---
 
 ## 1. Koncept
 
-**„Web je loď."** Návštěvník nelistuje stránkou — *pluje*. Stránka je jedna souvislá
-plavba od nalodění po návrat, rozdělená na kapitoly (I–VII). Na pozadí se v rytmu
-scrollu posouvá panorama Prahy, dole je pořád voda, nahoře mosazná lišta můstku.
+**„Web je loď."** Návštěvník nelistuje stránkou, *pluje*. Homepage je jedna souvislá
+plavba, podrobnosti jsou na samostatných podstránkách. Na pozadí se v rytmu scrollu
+posouvá panorama Prahy, dole je pořád voda, nahoře mosazná lišta můstku.
 
 Barevná dramaturgie kopíruje denní dobu plavby:
-**úsvit (I) → den (II–III) → soumrak (IV–V) → noc (VI–VII)**.
+**úsvit (hero) > den (nabídka) > noc (trasa) > bílá (rozcestník) > soumrak (rezervace)**.
 
 ---
 
-## 2. Pattern
+## 2. Informační architektura
+
+| Stránka | Obsah |
+|---------|-------|
+| `index.html` | Hero, ticker, nabídka plaveb (lodní lístky), trasa (panorama), rozcestník, CTA |
+| `na-palube.html` | Vybavení (portholes), paluby (bento), citace |
+| `pronajem.html` | Soukromé plavby, chips, flotila (tabulka), postup ve 4 krocích |
+| `certifikaty.html` | Certifikát, jak to funguje |
+| `galerie.html` | Fotogalerie |
+| `kontakt.html` | Poptávkový formulář, kontaktní karta |
+
+Homepage drží jen tři kapitoly příběhu (nalodění, nabídka, trasa) a předává dál.
+Zbytek je na prokliky, aby web zůstal přehledný.
+
+## 3. Pattern
 
 | Položka | Hodnota |
-|---|---|
+|---------|---------|
 | Landing pattern | **Scroll-Triggered Storytelling** (`landing.csv`) |
-| Pořadí sekcí | Hero → Ticker → Nabídka → Trasa → Na palubě → Pronájem → Certifikát → Galerie → Poptávka |
-| CTA placement | Above the fold + mini-CTA na konci každé kapitoly + finální climax CTA (formulář) |
-| Progress indicator | **Povinný** — mosazná lišta nahoře + kapitolový rail vpravo |
-| Mobil | Bez scroll-jackingu; horizontální panorama degraduje na vertikální timeline |
+| CTA placement | Above the fold, mini-CTA na konci každé sekce, finální CTA band |
+| Progress indicator | **Povinný**, mosazná lišta nahoře a sekční rail vpravo |
+| Mobil | Bez scroll-jackingu, horizontální panorama degraduje na vertikální timeline |
 
-## 3. Style
+## 4. Style
 
 | Položka | Hodnota |
-|---|---|
-| Základ | **Parallax Storytelling** + **Editorial Grid / Magazine** (`styles.csv`) |
-| Skin | Art-deco / Belle Époque parník — mosaz, teak, krémový papír, noční Vltava |
-| Klíčové efekty | Vrstvený parallax (3 vrstvy), sticky horizontální panorama, SVG vlny, mosazný lesk, portholes, jemné houpání paluby |
-| Complexity | High |
+|---------|---------|
+| Základ | **Parallax Storytelling** a **Editorial Grid / Magazine** (`styles.csv`) |
+| Skin | Art-deco / Belle Époque parník: mosaz, teak, bílá, krémový papír, noční Vltava |
+| Klíčové efekty | Vrstvený parallax, sticky horizontální panorama, SVG vlny, mosazný lesk, portholes, houpání paluby |
 
 **Signature detaily**
-- `.deck` — silueta zábradlí a přídě v popředí hera (dojem „stojím na palubě")
-- `.sway` — houpání ±0.35° / 9 s, jen na popředí hera, vypnuto při `reduced-motion`
-- `.porthole` — kruhová maska s mosazným prstencem a nýty
-- `.rivets` — `repeating-radial-gradient` nýtů na mosazných lištách
-- `.waves` — 3 vrstvy SVG vln s rozdílnou rychlostí
-- `.brass-shine` — přejezd lesku přes CTA a certifikát
+* `.hero__deck` silueta zábradlí (mosazné madlo, teakový čepec, sloupky) v popředí hera
+* `.sway` houpání 0,3 stupně za 9 s, jen na popředí hera, vypnuto při `reduced-motion`
+* `.porthole` kruhová maska s mosazným prstencem
+* `.rivets` nýty na mosazné liště přes `repeating-radial-gradient`
+* `.waves` dvě vrstvy SVG vln s rozdílnou rychlostí a periodou
+* `[class*="cut--"]` vlnový předěl mezi sekcemi přes `mask`, barvu bere z tokenu
+* `.btn--brass::after` přejezd lesku přes CTA a certifikát
 
-## 4. Barvy
+## 5. Barvy
 
 | Role | Token | Hex | Poznámka |
-|---|---|---|---|
-| Noc / hlavní tmavá | `--night` | `#08171F` | pozadí nočních kapitol |
-| Trup lodi | `--hull` | `#0E2833` | karty na tmavém |
-| Hloubka | `--deep` | `#123A49` | přechody, hairlines |
-| Vltava | `--vltava` | `#1C5A67` | voda, sekundární |
-| Mosaz | `--brass` | `#C9A227` | primární akcent |
+|------|-------|-----|----------|
+| Noc | `--night` | `#08171F` | pozadí nočních sekcí |
+| Trup lodi | `--hull` | `#0E2833` | karty na tmavém, patička |
+| Hloubka | `--deep` | `#123A49` | přechody, vlny |
+| Vltava | `--vltava` | `#1C5A67` | druhá vrstva vln |
+| Mosaz | `--brass` | `#C9A227` | primární akcent **jen na tmavém** |
 | Mosaz světlá | `--brass-lt` | `#EBD292` | gradienty, hover |
-| Mosaz tmavá | `--brass-dk` | `#7E6412` | stíny, borders na světlém |
-| Krém / papír | `--cream` | `#F4EDE0` | světlé pozadí, text na tmavém |
-| Krém tlumený | `--cream-2` | `#D9CEBB` | sekundární text na tmavém (9.4:1) |
-| Inkoust | `--ink` | `#0B1418` | text na světlém (16:1) |
-| Inkoust tlumený | `--ink-2` | `#42555C` | sekundární text na světlém (7.2:1) |
-| Teak | `--teak` | `#7A4B2A` | dřevo, footer |
+| Mosaz tmavá | `--brass-dk` | `#7E6412` | akcent **na světlém** (5,7:1 na bílé) |
+| Bílá | `--white` | `#FFFFFF` | rozcestník, podstránkové sekce |
+| Krém | `--cream` | `#F4EDE0` | nabídka plaveb, text na tmavém |
+| Krém tlumený | `--cream-2` | `#D9CEBB` | sekundární text na tmavém (9,4:1) |
+| Inkoust | `--ink` | `#0B1418` | text na světlém (18,6:1 na bílé) |
+| Inkoust tlumený | `--ink-2` | `#42555C` | sekundární text na světlém (7,4:1) |
+| Teak | `--teak` | `#7A4B2A` | dřevo zábradlí |
 
-**CTA:** mosazný gradient `--brass-lt → --brass` s textem `--night` → kontrast **9.6:1**.
+**CTA:** mosazný gradient `--brass-lt` do `--brass` s textem `--night`, kontrast **9,6:1**.
 
-> Kontrast ověřen pro všechny páry text/pozadí na min. **4.5:1** (WCAG AA), většina AAA.
+> Pravidlo: `--brass` je čitelná jen na tmavém pozadí. Na bílé a krémové se používá
+> výhradně `--brass-dk`. Kontrast ověřen skriptem na všech textových uzlech.
 
-## 5. Typografie
+## 6. Typografie
 
-Pairing **„Classic Elegant"** (`typography.csv`): **Playfair Display** + **Inter**.
+Pairing **„Classic Elegant"** (`typography.csv`): **Playfair Display** a **Inter**.
 
 | Role | Font | Nastavení |
-|---|---|---|
-| Display / H1–H3 | Playfair Display 600/700 | `letter-spacing: -0.02em`, `line-height: 1.05` |
-| Eyebrow / štítky | Playfair Display 600 | `uppercase`, `letter-spacing: .22em` |
-| Body | Inter 400 | `16–18px`, `line-height: 1.7`, max `68ch` |
-| Meta / časy | Inter 500 | `font-variant-numeric: tabular-nums` |
+|------|------|-----------|
+| Display, H1 až H3 | Playfair Display 600/700 | `letter-spacing: -0.02em`, `line-height: 1.06` |
+| Eyebrow, štítky | Playfair Display 600 | `uppercase`, `letter-spacing: .22em` |
+| Body | Inter 400 | 16 až 17 px, `line-height: 1.7`, max 68 znaků na řádek |
+| Meta, časy | Inter 500 | `font-variant-numeric: tabular-nums` |
 
-Škála: `clamp()` fluid — H1 `clamp(2.75rem, 7vw, 6.5rem)`.
+Škála fluid přes `clamp()`, H1 `clamp(2.75rem, 7.2vw, 6.5rem)`.
 
-## 6. Prostor & mřížka
+## 7. Prostor a mřížka
 
-- Container `--maxw: 1240px`, gutter `clamp(1.25rem, 4vw, 3rem)`
-- Vertikální rytmus sekcí: `clamp(5rem, 11vh, 9rem)`
-- Spacing scale: `4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 96 / 144 px`
-- Radius: `--r-sm: 4px`, `--r: 10px`, `--r-lg: 20px`, porthole `50%`
-- Z-index scale: `10` obsah · `20` sticky · `30` nav · `40` overlay · `50` menu
+* Container `--maxw: 1240px`, gutter `clamp(1.25rem, 4vw, 3rem)`
+* Vertikální rytmus sekcí `clamp(5rem, 11vh, 9rem)`
+* Radius `--r-sm: 4px`, `--r: 10px`, porthole `50%`
+* Z-index scale: `10` obsah, `20` sticky, `30` nav, `40` overlay, `50` menu
 
-## 7. Pohyb
+## 8. Pohyb
 
 | Pravidlo | Hodnota |
-|---|---|
-| Micro-interakce | 180–260 ms, `cubic-bezier(.22,.61,.36,1)` (ease-out) |
-| Reveal on scroll | 600 ms, `translateY(28px) → 0`, stagger 70 ms |
-| Parallax / panorama | řízeno `IntersectionObserver` + `requestAnimationFrame`, jen `transform` |
-| Nekonečné animace | pouze vlny a ticker (dekorativní, pomalé, `will-change: transform`) |
-| `prefers-reduced-motion` | **vypíná** parallax, houpání, ticker i vlny; panorama přepne na statické |
+|----------|---------|
+| Micro-interakce | 180 až 260 ms, `cubic-bezier(.22,.61,.36,1)` |
+| Reveal on scroll | 600 ms, `translateY(28px)` na 0, stagger 70 ms |
+| Parallax, panorama | `IntersectionObserver` a jedna `requestAnimationFrame` smyčka, jen `transform` |
+| Nekonečné animace | pouze vlny a ticker, pomalé, dekorativní |
+| `prefers-reduced-motion` | **vypíná** parallax, houpání, ticker i vlny, panorama přepne na statické |
 
-## 8. Odchylky od vygenerovaného systému (a proč)
+**Vlny.** Perioda tvaru je 720 (vrstva A) a 480 (vrstva B) jednotek ve `viewBox`
+širokém 2880. Posun je přesně 1440, tedy celý počet period v obou vrstvách, proto
+se tvar tiluje bez švu. Překlopení v patičce patří na kontejner `.waves--footer`,
+ne na `<svg>`, jinak ho přepíše `transform` z animace `drift`.
+
+## 9. Odchylky od vygenerovaného systému
 
 | Vygenerováno | Použito | Důvod |
-|---|---|---|
-| Style: **Liquid Glass** | Parallax Storytelling + Editorial Grid s art-deco skinem | Liquid Glass je bezčasový SaaS look; parník na Vltavě má historii a řemeslo. Glass má navíc dle `styles.csv` *Moderate-Poor* performance a problém s kontrastem. |
-| Colors: `#1E3A8A / #3B82F6 / #F97316` (sky blue + booking orange) | Vlastní paleta noční Vltavy + mosaz | Bootstrap-modrá + oranžová = generická cestovka. Mosaz/teak/krém je tematické a dražší na pohled. Kontrast zůstává ≥ AA. |
-| Typography: Playfair Display SC + Karla | Playfair Display + Inter | Stejná rodina display fontu, ale Inter má lepší čitelnost v malých velikostech a tabulární číslice pro časy odjezdů. |
-| Pattern: Hero → Features → CTA | Scroll storytelling se 7 kapitolami | Zadání: „ať je web jako loď" → lineární narativ plavby. |
+|--------------|---------|-------|
+| Style **Liquid Glass** | Parallax Storytelling a Editorial Grid s art-deco skinem | Liquid Glass je bezčasový SaaS look, parník na Vltavě má historii a řemeslo. Glass má navíc dle `styles.csv` *Moderate-Poor* performance a problém s kontrastem. |
+| Colors `#1E3A8A / #3B82F6 / #F97316` | Vlastní paleta noční Vltavy, mosaz, bílá | Bootstrap modrá s oranžovou je generická cestovka. Mosaz, teak a krém působí dráž a tematicky. |
+| Typography Playfair Display SC a Karla | Playfair Display a Inter | Stejná rodina display fontu, ale Inter má lepší čitelnost v malých velikostech a tabulární číslice pro časy odjezdů. |
+| Pattern Hero > Features > CTA | Scroll storytelling na homepage a samostatné podstránky | Zadání: web má být jako loď, k tomu přehlednost. |
 
-**Anti-patterns k vyhnutí** (z generovaného systému): laciné vizuály, rychlé animace.
-Doplněno: žádné emoji jako ikony, žádný scroll-jacking, žádné auto-play video se zvukem.
+**Anti-patterns k vyhnutí:** laciné vizuály, rychlé animace, emoji jako ikony,
+scroll-jacking, auto-play video se zvukem, `--brass` jako text na světlém pozadí.
 
-## 9. Pre-Delivery Checklist
+## 10. Pre-Delivery Checklist
 
-- [x] Žádné emoji jako ikony — vše inline SVG (Lucide-style, 24×24 viewBox)
+- [x] Žádné emoji jako ikony, vše inline SVG s viewBox 24x24
 - [x] `cursor: pointer` na všech klikatelných prvcích
-- [x] Hover přechody 180–260 ms, bez layout shiftu
-- [x] Kontrast textu ≥ 4.5:1 v obou režimech sekcí
-- [x] Viditelný `:focus-visible` ring (mosazný, 2px + offset)
+- [x] Hover přechody 180 až 260 ms, bez layout shiftu
+- [x] Kontrast ověřen na všech textových uzlech s kompozitováním průhledných vrstev
+- [x] Viditelný `:focus-visible` ring, mosazný, 2 px s offsetem
 - [x] `prefers-reduced-motion` respektován globálně
 - [x] Responzivní 375 / 768 / 1024 / 1440 px, bez horizontálního scrollu
 - [x] `alt` u všech obsahových obrázků, `aria-label` u ikonových tlačítek
-- [x] `<label for>` u všech polí formuláře, chyby u pole + `aria-live`
-- [x] Obrázky `loading="lazy"` + `width`/`height` (rezervace místa)
+- [x] `<label for>` u všech polí formuláře, chyby u pole a `aria-live`
+- [x] Obrázky `loading="lazy"` a `width`/`height` proti CLS
+- [x] Obsah čitelný i bez JS
