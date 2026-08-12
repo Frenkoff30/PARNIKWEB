@@ -268,24 +268,28 @@ section[id],[id]{scroll-margin-top:88px}
 
 .waves{
   position:absolute; left:0; right:0; bottom:0;
-  height:clamp(110px,16vh,180px);
+  height:clamp(92px,13vh,150px);
   pointer-events:none; overflow:hidden; z-index:1;
 }
 .waves svg{position:absolute; left:0; bottom:0; width:200%; height:100%; min-width:1400px}
-.waves__a{fill:var(--deep); opacity:.92; animation:drift 30s linear infinite}
-.waves__b{fill:var(--vltava); opacity:.5; animation:drift 19s linear infinite reverse}
+.waves__a{fill:#0d2c3b; animation:drift 34s linear infinite}
+.waves__b{fill:var(--deep); opacity:.55; animation:drift 21s linear infinite reverse}
+.waves__glint{stroke:var(--brass-lt); stroke-width:1.4; opacity:.15;
+  animation:drift 34s linear infinite}
+.waves__glint path{vector-effect:non-scaling-stroke}
 @keyframes drift{from{transform:translate3d(0,0,0)} to{transform:translate3d(-50%,0,0)}}
 
 .waves--footer{
   top:0; bottom:auto; height:clamp(56px,8vw,96px);
   transform:scaleY(-1);
 }
-.waves--footer .waves__a{fill:var(--night); opacity:1}
+.waves--footer .waves__a{fill:var(--night)}
 .waves--footer .waves__b{fill:var(--deep); opacity:.6}
+.waves--footer .waves__glint{display:none}
 
 .hero{
   position:relative; min-height:100svh; display:flex; align-items:flex-end;
-  padding:9rem 0 clamp(12rem,25vh,18rem);
+  padding:9rem 0 clamp(11rem,22vh,16rem);
   overflow:hidden; isolation:isolate; background:var(--night);
 }
 .hero__photo{position:absolute; inset:0; z-index:-3}
@@ -336,7 +340,7 @@ section[id],[id]{scroll-margin-top:88px}
 
 .hero__deck{
   position:absolute; left:-2%; right:-2%; bottom:0; z-index:3;
-  height:clamp(96px,15vh,164px); pointer-events:none;
+  height:clamp(84px,12.5vh,140px); pointer-events:none;
 }
 .hero__deck svg{width:100%; height:100%}
 .sway{transform-origin:50% 100%; animation:sway 9s ease-in-out infinite}
@@ -345,35 +349,7 @@ section[id],[id]{scroll-margin-top:88px}
   50%{transform:rotate(.3deg) translateY(-4px)}
 }
 
-.waves--hero{opacity:.9}
-
-.scrollcue{
-  position:absolute; left:50%; bottom:1.3rem; transform:translateX(-50%);
-  z-index:4; display:flex; flex-direction:column; align-items:center; gap:.5rem;
-  font-size:.68rem; text-transform:uppercase; letter-spacing:.24em;
-  color:var(--brass); cursor:pointer; transition:color var(--t);
-  text-shadow:0 2px 10px rgba(8,23,31,.9);
-}
-.scrollcue:hover{color:var(--brass-lt)}
-.scrollcue svg{animation:bob 2.4s ease-in-out infinite}
-@keyframes bob{0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)}}
-
-.ticker{
-  position:relative; z-index:var(--z-content);
-  background:linear-gradient(180deg,var(--brass-lt),var(--brass) 45%,#A98A16);
-  color:var(--night); overflow:hidden;
-  border-block:1px solid rgba(8,23,31,.25);
-  box-shadow:0 1px 0 rgba(255,255,255,.4) inset;
-}
-.ticker__track{
-  display:flex; align-items:center; gap:1.6rem; white-space:nowrap;
-  padding:.7rem 0; width:max-content;
-  animation:ticker 42s linear infinite;
-  font-family:var(--ff-display); font-weight:600;
-  font-size:.78rem; text-transform:uppercase; letter-spacing:.2em;
-}
-.ticker__track i{font-style:normal; font-size:.42rem; opacity:.55}
-@keyframes ticker{from{transform:translateX(0)} to{transform:translateX(-50%)}}
+.waves--hero{opacity:.85}
 
 .section{position:relative; padding-block:var(--sec-y); overflow:hidden}
 .section--tight{padding-top:0}
@@ -518,7 +494,7 @@ section[id],[id]{scroll-margin-top:88px}
 .route__head h2{font-size:clamp(2rem,1.2rem + 3vw,4rem); max-width:14ch}
 
 .route__stage{position:relative; flex:1; overflow:hidden}
-.route__pan{position:absolute; inset:0 auto 0 0; width:max(4800px,420vw); height:100%; will-change:transform}
+.route__pan{position:absolute; inset:0 auto 0 0; width:max(5400px,470vw); height:100%; will-change:transform}
 .pano{width:100%; height:100%}
 
 .route__boat{
@@ -632,7 +608,11 @@ section[id],[id]{scroll-margin-top:88px}
 }
 .phero h1{font-size:clamp(2.25rem,1.6rem + 3vw,4.6rem); max-width:16ch; margin-bottom:1.1rem}
 .phero__lead{max-width:56ch; color:var(--cream-2); font-size:clamp(1rem,.95rem + .3vw,1.15rem); margin:0}
-.phero .waves{opacity:.85; height:clamp(80px,11vh,130px)}
+.phero .waves{
+  position:absolute; left:0; right:0; bottom:0;
+  height:clamp(92px,13vh,150px);
+  pointer-events:none; overflow:hidden; z-index:1;
+}
 
 .crumbs{
   display:flex; flex-wrap:wrap; align-items:center; gap:.5rem;
@@ -963,14 +943,14 @@ a.contactcard__row:hover{color:var(--brass-lt); padding-left:.35rem}
     transition-duration:.01ms !important;
   }
   .js .reveal{opacity:1 !important; transform:none !important}
-  .sway,.compass,.smoke,.route__boat,.scrollcue svg,.ticker__track,.waves__a,.waves__b{animation:none !important}
+  .sway,.compass,.smoke,.route__boat,.waves__a,.waves__b,.waves__glint{animation:none !important}
   .route{height:auto !important}
   .route__sticky{display:none !important}
   .route__mobile{display:block !important}
 }
 
 @media print{
-  .rail,.chapters,.bridge,.menu,.route,.waves,.scrollcue,.ticker{display:none !important}
+  .rail,.chapters,.bridge,.menu,.route,.waves{display:none !important}
   body{background:#fff; color:#000}
   .section{padding-block:1.5rem}
 }

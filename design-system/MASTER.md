@@ -20,7 +20,7 @@ Barevná dramaturgie kopíruje denní dobu plavby:
 
 | Stránka | Obsah |
 |---------|-------|
-| `index.html` | Hero, ticker, nabídka plaveb (lodní lístky), trasa (panorama), rozcestník, CTA |
+| `index.html` | Hero, nabídka plaveb (lodní lístky), trasa (panorama), rozcestník, CTA |
 | `na-palube.html` | Vybavení (portholes), paluby (bento), citace |
 | `pronajem.html` | Soukromé plavby, chips, flotila (tabulka), postup ve 4 krocích |
 | `certifikaty.html` | Certifikát, jak to funguje |
@@ -52,7 +52,7 @@ Zbytek je na prokliky, aby web zůstal přehledný.
 * `.sway` houpání 0,3 stupně za 9 s, jen na popředí hera, vypnuto při `reduced-motion`
 * `.porthole` kruhová maska s mosazným prstencem
 * `.rivets` nýty na mosazné liště přes `repeating-radial-gradient`
-* `.waves` dvě vrstvy SVG vln s rozdílnou rychlostí a periodou
+* `.waves` dvě vrstvy SVG vln plus `.waves__glint`, tenká mosazná linka driftující ve stejném rytmu jako vrstva A, tedy odlesk na hřebenu
 * `[class*="cut--"]` vlnový předěl mezi sekcemi přes `mask`, barvu bere z tokenu
 * `.btn--brass::after` přejezd lesku přes CTA a certifikát
 
@@ -106,8 +106,14 @@ Pairing **„Classic Elegant"** (`typography.csv`): **Playfair Display** a **Int
 | Micro-interakce | 180 až 260 ms, `cubic-bezier(.22,.61,.36,1)` |
 | Reveal on scroll | 600 ms, `translateY(28px)` na 0, stagger 70 ms |
 | Parallax, panorama | `IntersectionObserver` a jedna `requestAnimationFrame` smyčka, jen `transform` |
-| Nekonečné animace | pouze vlny a ticker, pomalé, dekorativní |
-| `prefers-reduced-motion` | **vypíná** parallax, houpání, ticker i vlny, panorama přepne na statické |
+| Nekonečné animace | pouze vlny a odlesk hladiny, pomalé, dekorativní |
+| `prefers-reduced-motion` | **vypíná** parallax, houpání i vlny, panorama přepne na statické |
+
+**Panorama.** Generuje se skriptem `scripts/pano.py` (deterministicky, `seed=7`),
+aby geometrie seděla. Tři hloubkové vrstvy, městská zástavba mezi dominantami,
+svítící okna, nábřežní lampy a zrcadlový odraz skyline ve vodě přes `<use>` s
+maskou. Výsledné SVG je inlinované v `index.html`, skript se pouští jen když se
+panorama mění.
 
 **Vlny.** Perioda tvaru je 720 (vrstva A) a 480 (vrstva B) jednotek ve `viewBox`
 širokém 2880. Posun je přesně 1440, tedy celý počet period v obou vrstvách, proto

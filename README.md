@@ -24,6 +24,7 @@ Barevná dramaturgie kopíruje denní dobu plavby:
 | **Paluba v popředí hera** | Silueta zábradlí s mosazným madlem a teakovým čepcem, jemné houpání 0,3 stupně za 9 s. Dojem, že stojíte na palubě a díváte se přes zábradlí na vodu. |
 | **Lodní lano** | Scroll progress nahoře. Mosazné lano s parníkem, který po něm pluje. |
 | **Lodní lístky** | Nabídka plaveb jako perforované jízdenky s mosazným hřbetem a časy odjezdů. |
+| **Odlesk hladiny** | Nad hřebenem vlny běží tenká mosazná linka ve stejném rytmu jako vlna. Měsíční svit na vodě. |
 | **Portholes** | Kruhové masky s mosazným prstencem místo generických obrázkových karet. |
 | **Vlnové předěly** | Sekce oddělené SVG vlnou přes `mask`, takže barva se dědí z tokenu. |
 | **Dárkový certifikát** | Reálně vypadající certifikát s deco rámečkem a přejezdem lesku. |
@@ -46,8 +47,14 @@ parnikWEB/
 │  ├─ css/style.css           design tokeny a všechny komponenty
 │  └─ js/main.js              scroll engine, menu, validace formuláře
 ├─ design-system/MASTER.md    design system (zdroj pravdy)
+├─ scripts/pano.py           generátor SVG panoramatu Prahy
 └─ skills/ui-ux-pro-max/      skill použitý pro generování systému
 ```
+
+Panorama v sekci Trasa je vygenerované skriptem `scripts/pano.py` a inlinované
+v `index.html`. Skript je deterministický (`seed=7`), takže se dá kdykoliv
+přegenerovat se stejným výsledkem. Není součástí buildu, pouští se ručně jen
+při změně panoramatu.
 
 Žádné `npm install`, žádný build krok, nula runtime závislostí.
 
@@ -84,7 +91,7 @@ posouvá se o přesně 1440, tedy o celý počet period. Proto se tiluje bez vid
 **Přístupnost**
 * Kontrast ověřen skriptem na všech textových uzlech se správným kompozitováním
   průhledných vrstev. Na homepage 136 uzlů, nula pod limitem WCAG AA.
-* `prefers-reduced-motion` vypíná parallax, houpání, ticker, vlny i panorama.
+* `prefers-reduced-motion` vypíná parallax, houpání, vlny i panorama.
   Trasa se přepne na statickou vertikální timeline.
 * Focus ring viditelný všude, skip-link, focus trap v mobilním menu, `Esc` zavírá.
 * Formulář: `<label for>` u všech polí, chyby u pole a `aria-live`, `aria-invalid`.
