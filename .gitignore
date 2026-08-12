@@ -1,0 +1,16 @@
+# OS
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# editory
+.vscode/
+.idea/
+*.swp
+
+# python cache ze skillu
+__pycache__/
+*.pyc
+
+# node (pro případ, že přibyde tooling)
+node_modules/
