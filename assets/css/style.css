@@ -271,7 +271,11 @@ section[id],[id]{scroll-margin-top:88px}
   height:clamp(92px,13vh,150px);
   pointer-events:none; overflow:hidden; z-index:1;
 }
-.waves svg{position:absolute; left:0; bottom:0; width:200%; height:100%; min-width:1400px}
+/* max-width:none rusi globalni reset img,svg{max-width:100%}, ktery by srazil
+   sirku zpet na 100 % a drift o -50 % by odkryl prazdno vpravo.
+   min-width drzi vlnu na malych displejich klidnou; posun je vzdy presne
+   polovina sirky svg, takze tiling plati pri libovolne vysledne sirce. */
+.waves svg{position:absolute; left:0; bottom:0; width:200%; max-width:none; min-width:1400px; height:100%}
 .waves__a{fill:#0d2c3b; animation:drift 34s linear infinite}
 .waves__b{fill:var(--deep); opacity:.55; animation:drift 21s linear infinite reverse}
 .waves__glint{stroke:var(--brass-lt); stroke-width:1.4; opacity:.15;

@@ -85,8 +85,17 @@ hostovatelné kdekoliv (GitHub Pages, Netlify, libovolný FTP).
 
 **Vlny.** Tvar vlny má periodu 720 (resp. 480) jednotek v `viewBox` širokém 2880 a
 posouvá se o přesně 1440, tedy o celý počet period. Proto se tiluje bez viditelného
-švu. Překlopení vlny v patičce je na kontejneru, ne na `<svg>`, protože animace
-`drift` nastavuje `transform` a přepsala by `scaleY(-1)`.
+švu. Cesty generuje funkce `wave()` ve `scripts/waves.py`, protože ručně psané
+`s` segmenty se snadno rozbijí (stačí špatný kontrolní bod nebo chybějící segment).
+
+Tři věci, na kterých se to postupně rozbilo a stojí za pozor při úpravách:
+
+1. Globální reset `img,svg{max-width:100%}` srazil vlnám `width:200%` zpátky na
+   100 %, takže posun o `-50 %` odkryl prázdno vpravo. Řeší `max-width:none`.
+2. Animace `drift` nastavuje `transform`, takže přepíše `scaleY(-1)`. Překlopení
+   vlny v patičce proto patří na kontejner `.waves--footer`, ne na `<svg>`.
+3. U `s` segmentu se udává jen **druhý** kontrolní bod, a ten musí ležet na `2h`
+   (kde `h` je třetina segmentu), aby navázal na reflexi z předchozího segmentu.
 
 **Přístupnost**
 * Kontrast ověřen skriptem na všech textových uzlech se správným kompozitováním
