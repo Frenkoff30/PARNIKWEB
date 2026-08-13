@@ -52,7 +52,7 @@ Zbytek je na prokliky, aby web zůstal přehledný.
 * `.sway` houpání 0,3 stupně za 9 s, jen na popředí hera, vypnuto při `reduced-motion`
 * `.porthole` kruhová maska s mosazným prstencem
 * `.rivets` nýty na mosazné liště přes `repeating-radial-gradient`
-* `.waves` dvě vrstvy SVG vln plus `.waves__glint`, tenká mosazná linka driftující ve stejném rytmu jako vrstva A, tedy odlesk na hřebenu
+* `.waves` dvě statické vrstvy SVG vln na spodní hraně hera
 * `[class*="cut--"]` vlnový předěl mezi sekcemi přes `mask`, barvu bere z tokenu
 * `.btn--brass::after` přejezd lesku přes CTA a certifikát
 
@@ -60,10 +60,10 @@ Zbytek je na prokliky, aby web zůstal přehledný.
 
 | Role | Token | Hex | Poznámka |
 |------|-------|-----|----------|
-| Noc | `--night` | `#08171F` | pozadí nočních sekcí |
-| Trup lodi | `--hull` | `#0E2833` | karty na tmavém, patička |
-| Hloubka | `--deep` | `#123A49` | přechody, vlny |
-| Vltava | `--vltava` | `#1C5A67` | druhá vrstva vln |
+| Noc | `--night` | `#0C2129` | pozadí nočních sekcí |
+| Trup lodi | `--hull` | `#12303C` | karty na tmavém, patička |
+| Hloubka | `--deep` | `#1A4757` | přechody, vlny |
+| Vltava | `--vltava` | `#256B7E` | druhá vrstva vln |
 | Mosaz | `--brass` | `#C9A227` | primární akcent **jen na tmavém** |
 | Mosaz světlá | `--brass-lt` | `#EBD292` | gradienty, hover |
 | Mosaz tmavá | `--brass-dk` | `#7E6412` | akcent **na světlém** (5,7:1 na bílé) |
@@ -86,16 +86,17 @@ Pairing **„Classic Elegant"** (`typography.csv`): **Playfair Display** a **Int
 | Role | Font | Nastavení |
 |------|------|-----------|
 | Display, H1 až H3 | Playfair Display 600/700 | `letter-spacing: -0.02em`, `line-height: 1.06` |
-| Eyebrow, štítky | Playfair Display 600 | `uppercase`, `letter-spacing: .22em` |
 | Body | Inter 400 | 16 až 17 px, `line-height: 1.7`, max 68 znaků na řádek |
 | Meta, časy | Inter 500 | `font-variant-numeric: tabular-nums` |
 
-Škála fluid přes `clamp()`, H1 `clamp(2.75rem, 7.2vw, 6.5rem)`.
+Škála fluid přes `clamp()`, H1 `clamp(2.75rem, 7.2vw, 6.5rem)`, H2 sekcí
+`clamp(1.75rem, 1.25rem + 2.1vw, 2.9rem)`. Eyebrow štítky nad sekcemi jsme
+vyhodili, nadpis stojí sám.
 
 ## 7. Prostor a mřížka
 
 * Container `--maxw: 1240px`, gutter `clamp(1.25rem, 4vw, 3rem)`
-* Vertikální rytmus sekcí `clamp(5rem, 11vh, 9rem)`
+* Vertikální rytmus sekcí `clamp(3.75rem, 8vh, 6.5rem)`
 * Radius `--r-sm: 4px`, `--r: 10px`, porthole `50%`
 * Z-index scale: `10` obsah, `20` sticky, `30` nav, `40` overlay, `50` menu
 
@@ -106,8 +107,8 @@ Pairing **„Classic Elegant"** (`typography.csv`): **Playfair Display** a **Int
 | Micro-interakce | 180 až 260 ms, `cubic-bezier(.22,.61,.36,1)` |
 | Reveal on scroll | 600 ms, `translateY(28px)` na 0, stagger 70 ms |
 | Parallax, panorama | `IntersectionObserver` a jedna `requestAnimationFrame` smyčka, jen `transform` |
-| Nekonečné animace | pouze vlny a odlesk hladiny, pomalé, dekorativní |
-| `prefers-reduced-motion` | **vypíná** parallax, houpání i vlny, panorama přepne na statické |
+| Nekonečné animace | jen houpání paluby, houpání lodi a kouř z komína |
+| `prefers-reduced-motion` | **vypíná** parallax, houpání i kouř, trasa přepne na vertikální timeline |
 
 **Panorama.** Pět vrstev, každá se posouvá svým `data-depth`, odtud hloubka:
 obloha 0,10 · dálka 0,32 · střed 0,58 · dominanty 1,00 · třpytky 1,06.
@@ -126,16 +127,19 @@ ale klouže a dobíhá. Z rozdílu obou hodnot padá rychlost, která řídí ko
 z komína, vlnu u přídě a náklon trupu přes `--tilt`, `--smoke` a `--wake`.
 Náklon jde přes custom property proto, že `transform` už patří animaci houpání.
 
-**Zdroj.** Generuje se skriptem `scripts/pano.py` (deterministicky, `seed=7`),
-aby geometrie seděla. Tři hloubkové vrstvy, městská zástavba mezi dominantami,
-svítící okna, nábřežní lampy a zrcadlový odraz skyline ve vodě přes `<use>` s
-maskou. Výsledné SVG je inlinované v `index.html`, skript se pouští jen když se
-panorama mění.
+**Zdroj.** Generuje se skriptem `scripts/pano.py` (deterministicky, `seed=23`).
+Městská zástavba mezi dominantami, svítící okna, nábřežní lampy a zrcadlový
+odraz skyline ve vodě přes `<use>` s maskou. Výsledné vrstvy jsou inlinované
+v `index.html`, skript se pouští jen když se panorama mění.
 
-**Vlny.** Perioda tvaru je 720 (vrstva A) a 480 (vrstva B) jednotek ve `viewBox`
-širokém 2880. Posun je přesně 1440, tedy celý počet period v obou vrstvách, proto
-se tvar tiluje bez švu. Překlopení v patičce patří na kontejner `.waves--footer`,
-ne na `<svg>`, jinak ho přepíše `transform` z animace `drift`.
+Pravidlo, které drží realističnost: **nic nelevituje**. Terén je funkce
+`terrain(x)` a každá stavba se kreslí od střechy až na hladinu, takže mezi ní
+a zemí nemůže vzniknout mezera. Komín patří vždy na hlavní tělo domu, nikdy
+k hřebeni věžičky.
+
+**Vlny.** Statické, bez posunu, jen na spodní hraně hera. Cesty generuje
+`scripts/waves.py`; ruční `s` segmenty se rozbíjejí příliš snadno. Patička wave
+nemá, předěl dělá mosazná linka a tmavší podklad.
 
 ## 9. Odchylky od vygenerovaného systému
 
