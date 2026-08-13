@@ -98,49 +98,16 @@
   var railFill = $('.rail__fill');
   var railBoat = $('.rail__boat');
   var bridge = $('#bridge');
-  var route = $('.route');
-  var routePan = $('.route__pan');
-  var routeStops = $$('.route__stops li');
-  var routeProg = $('.route__prog span');
-
   var ticking = false;
-  var lastStop = -1;
-  var panShift = 0;
-
-  function measure() {
-    if (!route || !routePan) return;
-    var stage = $('.route__stage');
-    if (!stage) return;
-    panShift = Math.max(0, routePan.offsetWidth - stage.offsetWidth);
-  }
 
   function frame() {
     ticking = false;
     var y = window.pageYOffset || document.documentElement.scrollTop;
     var docH = document.documentElement.scrollHeight - window.innerHeight;
     var p = docH > 0 ? clamp(y / docH, 0, 1) : 0;
-
     if (railFill) railFill.style.transform = 'scaleX(' + p + ')';
     if (railBoat) railBoat.style.transform = 'translateX(calc(' + (p * 100) + 'vw - 50%))';
     if (bridge) bridge.classList.toggle('is-stuck', y > 40);
-
-    if (route && routePan && desktop.matches && !reduced.matches) {
-      var top = route.offsetTop;
-      var span = route.offsetHeight - window.innerHeight;
-      var rp = span > 0 ? clamp((y - top) / span, 0, 1) : 0;
-
-      routePan.style.transform = 'translate3d(' + (-panShift * rp) + 'px,0,0)';
-      if (routeProg) routeProg.style.width = (rp * 100) + '%';
-
-      var idx = 0;
-      for (var i = 0; i < routeStops.length; i++) {
-        if (parseFloat(routeStops[i].dataset.at) <= rp + 0.04) idx = i;
-      }
-      if (idx !== lastStop) {
-        routeStops.forEach(function (li, i) { li.classList.toggle('is-on', i === idx); });
-        lastStop = idx;
-      }
-    }
   }
 
   function onScroll() {
@@ -150,10 +117,113 @@
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', function () { measure(); onScroll(); }, { passive: true });
-  window.addEventListener('load', function () { measure(); onScroll(); });
-  measure();
+  window.addEventListener('resize', onScroll, { passive: true });
   onScroll();
+
+  /* Plavba.
+     Cil se pocita primo ze scrollu, zobrazena pozice k nemu dojizdi (lerp).
+     Lod tak nesedi na scrollu natvrdo, ale klouze a dobiha. Z rozdilu obou
+     hodnot padá rychlost, ktera ridi koure z komina, vlnu u provy a naklon
+     trupu. Kazda vrstva panoramatu se posouva svym data-depth, odtud hloubka. */
+  var route = $('.route');
+  var stage = $('.route__stage');
+  var panos = $$('.pano');
+  var stops = $$('.route__stops li');
+  var ticks = $$('.route__ticks li');
+  var lineFill = $('.route__line span');
+  var boat = $('.route__boat');
+
+  var shift = 0, target = 0, shown = 0, vel = 0, raf = 0, lastStop = -1;
+
+  function live() {
+    return !!(route && stage && panos.length && desktop.matches && !reduced.matches);
+  }
+
+  function measure() {
+    if (!live()) { shift = 0; return; }
+    var main = panos[0];
+    for (var i = 0; i < panos.length; i++) {
+      if (parseFloat(panos[i].dataset.depth) === 1) main = panos[i];
+    }
+    shift = Math.max(0, main.offsetWidth - stage.offsetWidth);
+  }
+
+  function progress() {
+    var span = route.offsetHeight - window.innerHeight;
+    if (span <= 0) return 0;
+    return clamp(((window.pageYOffset || 0) - route.offsetTop) / span, 0, 1);
+  }
+
+  function paint(p, v) {
+    for (var i = 0; i < panos.length; i++) {
+      var d = parseFloat(panos[i].dataset.depth || '1');
+      panos[i].style.transform = 'translate3d(' + (-shift * d * p).toFixed(2) + 'px,0,0)';
+    }
+    if (lineFill) lineFill.style.width = (p * 100).toFixed(2) + '%';
+
+    var idx = 0;
+    for (var j = 0; j < stops.length; j++) {
+      if (parseFloat(stops[j].dataset.at) <= p + 0.04) idx = j;
+    }
+    if (idx !== lastStop) {
+      for (var k = 0; k < stops.length; k++) stops[k].classList.toggle('is-on', k === idx);
+      for (var m = 0; m < ticks.length; m++) {
+        ticks[m].classList.toggle('is-done', m <= idx);
+        ticks[m].classList.toggle('is-active', m === idx);
+      }
+      lastStop = idx;
+    }
+    if (boat) {
+      var sp = clamp(v * 60, 0, 1);
+      boat.style.setProperty('--tilt', (-sp * 1.6).toFixed(2) + 'deg');
+      boat.style.setProperty('--smoke', (0.24 + sp * 0.5).toFixed(2));
+      boat.style.setProperty('--wake', (0.28 + sp * 0.72).toFixed(2));
+    }
+  }
+
+  function sail() {
+    var d = target - shown;
+    shown += d * 0.11;
+    vel = vel * 0.86 + Math.abs(d) * 0.14;
+    paint(shown, vel);
+    if (Math.abs(d) > 0.0002 || vel > 0.0005) {
+      raf = requestAnimationFrame(sail);
+    } else {
+      raf = 0; vel = 0; shown = target;
+      paint(shown, 0);
+    }
+  }
+
+  function kick() {
+    if (!live()) return;
+    target = progress();
+    if (!raf) raf = requestAnimationFrame(sail);
+  }
+
+  function clearRoute() {
+    for (var i = 0; i < panos.length; i++) panos[i].style.transform = '';
+    for (var j = 0; j < stops.length; j++) stops[j].classList.remove('is-on');
+    for (var k = 0; k < ticks.length; k++) ticks[k].classList.remove('is-done', 'is-active');
+    if (lineFill) lineFill.style.width = '';
+    lastStop = -1; shown = 0; target = 0; vel = 0;
+  }
+
+  function settle() {
+    if (!live()) { clearRoute(); return; }
+    measure();
+    shown = target = progress();
+    paint(shown, 0);
+  }
+
+  if (route) {
+    window.addEventListener('scroll', kick, { passive: true });
+    window.addEventListener('resize', settle, { passive: true });
+    window.addEventListener('load', settle);
+    settle();
+  }
+
+  if (desktop.addEventListener) desktop.addEventListener('change', settle);
+  if (reduced.addEventListener) reduced.addEventListener('change', settle);
 
   var form = $('#poptavka');
   if (form) {
@@ -235,17 +305,4 @@
     });
   }
 
-  function resetRoute() {
-    if (!routePan) return;
-    if (!desktop.matches || reduced.matches) {
-      routePan.style.transform = '';
-      routeStops.forEach(function (li) { li.classList.remove('is-on'); });
-      lastStop = -1;
-    } else {
-      measure();
-      onScroll();
-    }
-  }
-  if (desktop.addEventListener) desktop.addEventListener('change', resetRoute);
-  if (reduced.addEventListener) reduced.addEventListener('change', resetRoute);
 })();

@@ -2,15 +2,21 @@
 """
 Generator panoramatu Prahy pro sekci Trasa. Deterministicky (seed).
 
-Dve pravidla, na kterych to stoji:
+Panorama je rozdelene na pet vrstev, ktere se pri scrollu posouvaji ruznou
+rychlosti (parallax). Odtud pocit hloubky a toho, ze lod skutecne pluje.
 
-1. Nic nelevituje. Teren je funkce terrain(x) a kazda stavba se kresli od
-   strechy az dolu na hladinu (WL). Prekryv je neviditelny, jde o siluety.
-2. Vzdusna perspektiva. Tri vrstvy maji jasne odlisenou svetlost, vzdalene
-   jsou svetlejsi a mekci. Detail je zamerne drobny, aby se silueta cetla
-   jako mesto a ne jako lepenkove kulisy.
+  sky   0.10  obloha, hvezdy, mesic, opar, zakladni hladina
+  far   0.32  vzdalena zastavba na druhem brehu, mekka a svetla
+  mid   0.58  stredni pasmo zastavby
+  near  1.00  teren, dominanty, nabrezi, lampy a odraz ve vode
+  foam  1.06  trpytky na hladine, nejrychlejsi
 
-Spusteni prepise <svg class="pano"> v index.html.
+Terén a dominanty musi byt ve stejne vrstve, jinak by hrad odplul ze sveho
+kopce. Vzdalene vrstvy proto stoji na rovine, jde o protejsi breh.
+
+Pravidlo: nic nelevituje. Kazda stavba se kresli od strechy az na hladinu.
+
+Spusteni prepise vrstvy uvnitr <div class="route__stage"> v index.html.
 """
 import random, io, os, re, sys
 
@@ -18,7 +24,6 @@ W, H = 5200, 780
 WL = 600
 random.seed(23)
 
-SKY_TOP, SKY_MID, SKY_HOR = "#0d2433", "#194256", "#2d6a80"
 HAZE = "#2b6076"
 FAR  = "#22566a"
 MID  = "#143a4a"
@@ -43,12 +48,7 @@ def terrain(x):
     return WL
 
 
-out = []
-a = out.append
-
-
 def lit(x, y, cols, rows, gx, gy, w=5, h=8, chance=.42):
-    """Drobna svitici okna. Zamerne mala a ridka."""
     s = []
     for c in range(cols):
         for r in range(rows):
@@ -59,8 +59,8 @@ def lit(x, y, cols, rows, gx, gy, w=5, h=8, chance=.42):
     return "".join(s)
 
 
-def roofline(x0, x1, hmin, hmax, unit, windows=True):
-    """Rada domu se strechami. Kazdy dum sahá az na WL."""
+def roofline(x0, x1, hmin, hmax, unit, windows=True, flat=False):
+    """Rada domu. Kazdy dum sahá az na WL, takze nemuze levitovat."""
     body, wins = [], []
     x = x0
     while x < x1:
@@ -69,29 +69,31 @@ def roofline(x0, x1, hmin, hmax, unit, windows=True):
             w = x1 - x
         if w < 16:
             break
-        base = terrain(x + w / 2.0)
+        base = WL if flat else terrain(x + w / 2.0)
         top = base - random.randint(hmin, hmax)
         style = random.random()
-        if style < .62:                                  # sedlova strecha
+        spots = [.22, .74]
+        if style < .62:
             roof = random.randint(8, 16)
             body.append('M%g %g V%g l%g %g l%g %g V%g Z'
                         % (x, WL, top, w / 2.0, -roof, w / 2.0, roof, WL))
-            ridge = top - roof
-        elif style < .84:                                # plocha s rimsou
+            chim = top - roof * .45
+        elif style < .84:
             body.append('M%g %g V%g h%g V%g Z' % (x, WL, top, w, WL))
             body.append('M%g %g h%g v-5h%g Z' % (x - 2, top, w + 4, -(w + 4)))
-            ridge = top
-        else:                                            # vezicka
+            chim = top + 2
+        else:
             body.append('M%g %g V%g h%g V%g Z' % (x, WL, top, w, WL))
             tw = max(8, w * .3)
             tx = x + (w - tw) / 2.0
             body.append('M%g %g v%g h%g v%g Z' % (tx, top, -22, tw, 22))
             body.append('M%g %g l%g %g l%g %g Z' % (tx, top - 22, tw / 2.0, -16, tw / 2.0, 16))
-            ridge = top - 38
+            chim = top + 2
+            spots = [.11, .86]
         if random.random() < .3:
             cw = 4
-            cx = x + w * random.choice([.22, .74])
-            body.append('M%g %g h%g v%g h%g Z' % (cx, ridge + 6, cw, -random.randint(9, 16), -cw))
+            cx = x + w * random.choice(spots)
+            body.append('M%g %g h%g v%g h%g Z' % (cx, chim, cw, -random.randint(9, 16), -cw))
         if windows and w > 26 and base - top > 40:
             cols = max(1, int((w - 10) // 13))
             rows = max(1, int((base - top - 20) // 19))
@@ -111,34 +113,50 @@ def ground(offset=0):
     return " ".join(p)
 
 
-# ------------------------------------------------------------------ obloha
-a('<rect width="%d" height="%d" fill="url(#sky)"/>' % (W, H))
-
+# =============================================================== 1. obloha
+sky = ['<defs>'
+       '<linearGradient id="pSky" x1="0" y1="0" x2="0" y2="1">'
+       '<stop offset="0%" stop-color="#0d2433"/><stop offset="52%" stop-color="#194256"/>'
+       '<stop offset="100%" stop-color="#2d6a80"/></linearGradient>'
+       '<linearGradient id="pHaze" x1="0" y1="0" x2="0" y2="1">'
+       '<stop offset="0%" stop-color="' + HAZE + '" stop-opacity="0"/>'
+       '<stop offset="100%" stop-color="' + HAZE + '" stop-opacity=".5"/></linearGradient>'
+       '<linearGradient id="pWater" x1="0" y1="0" x2="0" y2="1">'
+       '<stop offset="0%" stop-color="#0b2a38"/><stop offset="100%" stop-color="#061a24"/></linearGradient>'
+       '</defs>']
+sky.append('<rect width="%d" height="%d" fill="url(#pSky)"/>' % (W, WL))
 st = []
 for _ in range(110):
     st.append('<circle cx="%.0f" cy="%.0f" r="%.1f" opacity="%.2f"/>'
               % (random.uniform(0, W), random.uniform(16, 300),
                  random.choice([1.2, 1.6, 2.0]), random.uniform(.12, .4)))
-a('<g fill="%s">%s</g>' % (GLOW, "".join(st)))
+sky.append('<g fill="%s">%s</g>' % (GLOW, "".join(st)))
+sky.append('<g><circle cx="1180" cy="140" r="76" fill="%s" opacity=".05"/>'
+           '<circle cx="1180" cy="140" r="42" fill="%s" opacity=".1"/>'
+           '<circle cx="1180" cy="140" r="24" fill="#F8EDD2" opacity=".75"/>'
+           '<circle cx="1169" cy="132" r="24" fill="url(#pSky)" opacity=".5"/></g>' % (GLOW, GLOW))
+sky.append('<rect y="430" width="%d" height="170" fill="url(#pHaze)"/>' % W)
+sky.append('<rect y="%d" width="%d" height="%d" fill="url(#pWater)"/>' % (WL, W, H - WL))
 
-a('<g><circle cx="1180" cy="140" r="76" fill="%s" opacity=".05"/>'
-  '<circle cx="1180" cy="140" r="42" fill="%s" opacity=".1"/>'
-  '<circle cx="1180" cy="140" r="24" fill="#F8EDD2" opacity=".75"/>'
-  '<circle cx="1169" cy="132" r="24" fill="url(#sky)" opacity=".5"/></g>' % (GLOW, GLOW))
+# ============================================================= 2. dalka
+far = ['<g fill="%s" opacity=".3">%s</g>' % (HAZE, roofline(0, W, 18, 54, (20, 36), windows=False, flat=True))]
+far.append('<g fill="%s" opacity=".42">%s</g>' % (FAR, roofline(0, W, 24, 66, (22, 40), windows=False, flat=True)))
 
-# opar nad horizontem
-a('<rect y="430" width="%d" height="180" fill="url(#haze)"/>' % W)
+# ============================================================= 3. stred
+mid = ['<g fill="%s" opacity=".72">%s</g>' % (MID, roofline(0, W, 32, 82, (24, 44), windows=False, flat=True))]
 
-# ------------------------------------------------------- vzdusna perspektiva
-a('<path d="%s" fill="%s" opacity=".34"/>' % (ground(46), HAZE))
-a('<g fill="%s" opacity=".32">%s</g>' % (FAR, roofline(0, W, 22, 62, (22, 40), windows=False)))
-a('<path d="%s" fill="%s" opacity=".55"/>' % (ground(0), FAR))
-a('<g fill="%s" opacity=".62">%s</g>' % (MID, roofline(0, W, 30, 78, (24, 46), windows=False)))
+# ============================================================= 4. blizko
+near = []
+n = near.append
+n('<defs><linearGradient id="pRefl" x1="0" y1="%d" x2="0" y2="%d" gradientUnits="userSpaceOnUse">'
+  '<stop offset="0" stop-color="#fff" stop-opacity=".45"/>'
+  '<stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>'
+  '<mask id="pReflFade"><rect y="%d" width="%d" height="%d" fill="url(#pRefl)"/></mask></defs>'
+  % (WL, H, WL, W, H - WL))
 
-# ------------------------------------------------------------------ skyline
-sky = []
-s = sky.append
-
+sk = []
+s = sk.append
+s('<path d="%s" fill="%s" opacity=".55"/>' % (ground(0), FAR))
 s('<g fill="%s">' % MID)
 for x0, x1 in [(0, 220), (790, 1030), (1900, 2120), (2930, 3090),
                (3490, 3690), (4010, 4360), (5080, W)]:
@@ -147,7 +165,7 @@ s('</g>')
 
 s('<g fill="%s">' % NEAR)
 
-# --- Cechuv most
+# Cechuv most
 s('<path fill-rule="evenodd" d="M240 508h520v92H240z'
   'M276 600a62 52 0 0 1 124 0z'
   'M438 600a62 52 0 0 1 124 0z'
@@ -156,7 +174,7 @@ for px in (252, 414, 576, 740):
     s('<path d="M%g 508v-44h11v44z"/>' % px)
     s('<path d="M%g 464l5.5-13 5.5 13z"/>' % px)
 
-# --- Prazsky hrad, plato 472
+# Prazsky hrad
 s('<path d="M1070 %d V472h640v%d z"/>' % (WL, WL - 472))
 s('<path d="M1062 472h656v-13h-656z"/>')
 s('<path d="M1290 %d V352h182v%d z"/>' % (WL, WL - 352))
@@ -170,7 +188,7 @@ s('<path d="M1514 242v-12h14v12z"/><path d="M1517 230l4-16 4 16z"/>')
 for bx in range(1084, 1284, 38):
     s('<path d="M%g 472v-40h7v40z"/>' % bx)
 
-# --- Karluv most
+# Karluv most
 s('<path fill-rule="evenodd" d="M2150 %d h760v100h-760z'
   'M2192 600a46 56 0 0 1 92 0z'
   'M2304 600a46 56 0 0 1 92 0z'
@@ -191,19 +209,21 @@ s('<path d="M2896 500v-24a11 9 0 0 1 22 0v24z" fill="%s"/>' % DARK)
 for sx in range(2258, 2810, 58):
     s('<path d="M%g 500v-19a5 5 0 0 1 10 0v19z"/>' % sx)
 
-# --- Narodni divadlo
+# Narodni divadlo
 s('<path d="M3120 %d V430h340v%d z"/>' % (WL, WL - 430))
 s('<path d="M3150 430v-32h280v32z"/>')
 s('<path d="M3144 398l50-27 192 0 50 27z"/>')
 s('<path d="M3128 430v-38h38v38z"/><path d="M3436 430v-38h38v38z"/>')
+for ax in range(3174, 3418, 31):
+    s('<path d="M%g %d v-92a11 11 0 0 1 22 0v92z" fill="%s"/>' % (ax, WL, MID))
 
-# --- Tancici dum
+# Tancici dum
 s('<path d="M3752 %d V414h132v%d z"/>' % (WL, WL - 414))
 s('<path d="M3744 414h148v-14h-148z"/>')
 s('<path d="M3664 %d c7-84 50-113 41-170-5-37 19-56 51-51v221z"/>' % WL)
 s('<ellipse cx="3818" cy="392" rx="50" ry="11"/>')
 
-# --- Vysehrad, plato 462
+# Vysehrad
 s('<path d="M4530 %d V462h400v%d z"/>' % (WL, WL - 462))
 s('<path d="M4522 462h416v-12h-416z"/>')
 s('<path d="M4600 %d V376h224v%d z"/>' % (WL, WL - 376))
@@ -213,10 +233,9 @@ for tx in (4636, 4756):
     s('<path d="M%g 286l16-80 16 80z"/>' % tx)
 for bx in range(4544, 4930, 30):
     s('<path d="M%g 450v-14h15v14z"/>' % bx)
-
 s('</g>')
 
-# svetla v dominantach, drobna a ridka
+# svetla
 s('<g fill="%s">' % GLOW)
 s('<circle cx="1375" cy="404" r="11" opacity=".22"/>')
 s(lit(1090, 496, 14, 2, 38, 30, 6, 10, .5))
@@ -234,56 +253,43 @@ s(lit(4618, 392, 5, 1, 40, 26, 8, 14, .7))
 s('<circle cx="4712" cy="410" r="9" opacity=".22"/>')
 s('</g>')
 
-skyline = "".join(sky)
-a('<g id="skyline">%s</g>' % skyline)
-a('<use href="#skyline" transform="translate(0 1200) scale(1 -1)" '
-  'opacity=".16" mask="url(#reflFade)"/>')
+skyline = "".join(sk)
+n('<g id="skyline">%s</g>' % skyline)
+n('<use href="#skyline" transform="translate(0 1200) scale(1 -1)" opacity=".16" mask="url(#pReflFade)"/>')
 
-# nabrezni lampy, drobne
 lamps = []
 for lx in range(120, W, 240):
     lamps.append('<rect x="%g" y="%g" width="2.5" height="17" opacity=".22"/>' % (lx, WL - 30))
     lamps.append('<circle cx="%g" cy="%g" r="2.6" opacity=".42"/>' % (lx + 1.25, WL - 32))
     lamps.append('<circle cx="%g" cy="%g" r="7" opacity=".07"/>' % (lx + 1.25, WL - 32))
-a('<g fill="%s">%s</g>' % (GLOW, "".join(lamps)))
+n('<g fill="%s">%s</g>' % (GLOW, "".join(lamps)))
+n('<rect y="%d" width="%d" height="10" fill="%s"/>' % (WL - 10, W, DARK))
 
-a('<rect y="%d" width="%d" height="10" fill="%s"/>' % (WL - 10, W, DARK))
+# ============================================================= 5. trpytky
+foam = []
+sh = []
+for _ in range(80):
+    sh.append('<rect x="%.0f" y="%.0f" width="%.0f" height="1.5" rx=".75" opacity="%.2f"/>'
+              % (random.uniform(0, W * 1.12), random.uniform(WL + 14, H - 16),
+                 random.uniform(24, 120), random.uniform(.05, .16)))
+foam.append('<g fill="%s">%s</g>' % (GLOW, "".join(sh)))
 
-# voda
-a('<rect y="%d" width="%d" height="%d" fill="url(#water)"/>' % (WL, W, H - WL))
-shim = []
-for _ in range(48):
-    shim.append('<rect x="%.0f" y="%.0f" width="%.0f" height="1.5" opacity="%.2f"/>'
-                % (random.uniform(0, W), random.uniform(WL + 16, H - 18),
-                   random.uniform(24, 110), random.uniform(.03, .1)))
-a('<g fill="%s">%s</g>' % (GLOW, "".join(shim)))
+FOAM_W = int(W * 1.12)
+LAYERS = [("0.10", sky, W), ("0.32", far, W), ("0.58", mid, W),
+          ("1", near, W), ("1.06", foam, FOAM_W)]
 
-defs = (
-  '<defs>'
-  '<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">'
-  '<stop offset="0%%" stop-color="%s"/><stop offset="52%%" stop-color="%s"/>'
-  '<stop offset="100%%" stop-color="%s"/></linearGradient>'
-  '<linearGradient id="haze" x1="0" y1="0" x2="0" y2="1">'
-  '<stop offset="0%%" stop-color="%s" stop-opacity="0"/>'
-  '<stop offset="100%%" stop-color="%s" stop-opacity=".5"/></linearGradient>'
-  '<linearGradient id="water" x1="0" y1="0" x2="0" y2="1">'
-  '<stop offset="0%%" stop-color="#0b2a38"/><stop offset="100%%" stop-color="#061a24"/></linearGradient>'
-  '<linearGradient id="reflGrad" x1="0" y1="%d" x2="0" y2="%d" gradientUnits="userSpaceOnUse">'
-  '<stop offset="0" stop-color="#fff" stop-opacity=".45"/>'
-  '<stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>'
-  '<mask id="reflFade"><rect y="%d" width="%d" height="%d" fill="url(#reflGrad)"/></mask>'
-  '</defs>' % (SKY_TOP, SKY_MID, SKY_HOR, HAZE, HAZE, WL, H, WL, W, H - WL)
-)
-
-svg = ('<svg class="pano" viewBox="0 0 %d %d" preserveAspectRatio="xMinYMax slice" aria-hidden="true">'
-       % (W, H)) + defs + "".join(out) + '</svg>'
+html = "".join(
+    '<div class="pano" data-depth="%s"><svg viewBox="0 0 %d %d" preserveAspectRatio="xMinYMid meet" '
+    'aria-hidden="true">%s</svg></div>' % (d, w, H, "".join(parts))
+    for d, parts, w in LAYERS)
 
 if __name__ == "__main__":
     root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
     target = os.path.join(root, "index.html")
     t = io.open(target, encoding="utf-8").read()
-    t, k = re.subn(r'<svg class="pano".*?</svg>', lambda m: svg, t, flags=re.S)
+    t, k = re.subn(r'(<div class="route__stage">\s*).*?(\s*<div class="route__boat")',
+                   lambda m: m.group(1) + html + m.group(2), t, flags=re.S)
     if not k:
-        sys.exit("pano svg nenalezeno v index.html")
+        sys.exit("kotva route__stage / route__boat nenalezena")
     io.open(target, "w", encoding="utf-8", newline="").write(t)
-    print("index.html prepsan, delka svg:", len(svg))
+    print("vrstev:", len(LAYERS), "| delka html:", len(html))

@@ -109,7 +109,24 @@ Pairing **„Classic Elegant"** (`typography.csv`): **Playfair Display** a **Int
 | Nekonečné animace | pouze vlny a odlesk hladiny, pomalé, dekorativní |
 | `prefers-reduced-motion` | **vypíná** parallax, houpání i vlny, panorama přepne na statické |
 
-**Panorama.** Generuje se skriptem `scripts/pano.py` (deterministicky, `seed=7`),
+**Panorama.** Pět vrstev, každá se posouvá svým `data-depth`, odtud hloubka:
+obloha 0,10 · dálka 0,32 · střed 0,58 · dominanty 1,00 · třpytky 1,06.
+Terén a dominanty musí zůstat v jedné vrstvě, jinak by hrad odplul ze svého
+kopce; vzdálené vrstvy proto stojí na rovině, jde o protější břeh. Nejrychlejší
+vrstva má o 12 % širší `viewBox`, aby jí na konci plavby nedošel obsah.
+
+Šířku vrstvy diktuje vlastní poměr stran SVG (`height:100%; width:auto`).
+Nutné je k tomu `max-width:none` (globální reset by vrstvu srazil na šířku
+jeviště) a `width:max-content` na obalu, jinak absolutně pozicovaný prvek
+shrink-to-fit zvolí šířku jeviště.
+
+**Dojíždění.** Cíl se počítá přímo ze scrollu, zobrazená pozice k němu dojíždí
+lerpem (`shown += (target - shown) * 0.11`). Loď tak nesedí na scrollu natvrdo,
+ale klouže a dobíhá. Z rozdílu obou hodnot padá rychlost, která řídí kouř
+z komína, vlnu u přídě a náklon trupu přes `--tilt`, `--smoke` a `--wake`.
+Náklon jde přes custom property proto, že `transform` už patří animaci houpání.
+
+**Zdroj.** Generuje se skriptem `scripts/pano.py` (deterministicky, `seed=7`),
 aby geometrie seděla. Tři hloubkové vrstvy, městská zástavba mezi dominantami,
 svítící okna, nábřežní lampy a zrcadlový odraz skyline ve vodě přes `<use>` s
 maskou. Výsledné SVG je inlinované v `index.html`, skript se pouští jen když se
