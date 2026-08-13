@@ -98,7 +98,6 @@
   var railFill = $('.rail__fill');
   var railBoat = $('.rail__boat');
   var bridge = $('#bridge');
-  var heroLayers = $$('.hero__layer');
   var route = $('.route');
   var routePan = $('.route__pan');
   var routeStops = $$('.route__stops li');
@@ -124,13 +123,6 @@
     if (railFill) railFill.style.transform = 'scaleX(' + p + ')';
     if (railBoat) railBoat.style.transform = 'translateX(calc(' + (p * 100) + 'vw - 50%))';
     if (bridge) bridge.classList.toggle('is-stuck', y > 40);
-
-    if (!reduced.matches && y < window.innerHeight * 1.2) {
-      heroLayers.forEach(function (el) {
-        var d = parseFloat(el.dataset.depth || '0.1');
-        el.style.transform = 'translate3d(0,' + (y * d) + 'px,0)';
-      });
-    }
 
     if (route && routePan && desktop.matches && !reduced.matches) {
       var top = route.offsetTop;

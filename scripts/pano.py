@@ -1,292 +1,289 @@
 # -*- coding: utf-8 -*-
-"""Generator panoramatu Prahy pro sekci Trasa. Deterministicky (seed)."""
-import random, io
+"""
+Generator panoramatu Prahy pro sekci Trasa. Deterministicky (seed).
 
-W, H = 5400, 780
-WL = 600                      # vodni hladina
-random.seed(7)
+Dve pravidla, na kterych to stoji:
 
-FAR   = "#0f3242"
-MID   = "#0a2432"
-NEAR  = "#061620"
-DARK  = "#041016"
-GLOW  = "#EBD292"
+1. Nic nelevituje. Teren je funkce terrain(x) a kazda stavba se kresli od
+   strechy az dolu na hladinu (WL). Prekryv je neviditelny, jde o siluety.
+2. Vzdusna perspektiva. Tri vrstvy maji jasne odlisenou svetlost, vzdalene
+   jsou svetlejsi a mekci. Detail je zamerne drobny, aby se silueta cetla
+   jako mesto a ne jako lepenkove kulisy.
+
+Spusteni prepise <svg class="pano"> v index.html.
+"""
+import random, io, os, re, sys
+
+W, H = 5200, 780
+WL = 600
+random.seed(23)
+
+SKY_TOP, SKY_MID, SKY_HOR = "#0d2433", "#194256", "#2d6a80"
+HAZE = "#2b6076"
+FAR  = "#22566a"
+MID  = "#143a4a"
+NEAR = "#0a212c"
+DARK = "#061620"
+GLOW = "#F0D9A0"
+
+TERRAIN = [
+    (0, WL), (880, WL),
+    (1040, 472), (1780, 472), (1880, WL),
+    (4380, WL), (4520, 462), (4940, 462), (5060, WL),
+    (W, WL),
+]
+
+
+def terrain(x):
+    for i in range(len(TERRAIN) - 1):
+        x0, y0 = TERRAIN[i]
+        x1, y1 = TERRAIN[i + 1]
+        if x0 <= x <= x1:
+            return y0 if x1 == x0 else y0 + (y1 - y0) * (x - x0) / float(x1 - x0)
+    return WL
+
 
 out = []
 a = out.append
 
 
-def win(x, y, w, h, op):
-    return '<rect x="%g" y="%g" width="%g" height="%g" opacity="%.2f"/>' % (x, y, w, h, op)
-
-
-def window_grid(x, y, cols, rows, gx, gy, w=9, h=15, chance=.62):
-    """Mrizka sviticich oken."""
+def lit(x, y, cols, rows, gx, gy, w=5, h=8, chance=.42):
+    """Drobna svitici okna. Zamerne mala a ridka."""
     s = []
     for c in range(cols):
         for r in range(rows):
             if random.random() < chance:
-                s.append(win(x + c * gx, y + r * gy, w, h, random.choice([.28, .4, .55, .7])))
+                s.append('<rect x="%g" y="%g" width="%g" height="%g" opacity="%.2f"/>'
+                         % (x + c * gx, y + r * gy, w, h,
+                            random.choice([.18, .28, .4, .52])))
     return "".join(s)
 
 
-def townhouses(x0, x1, base, hmin, hmax, unit=(46, 78), fill=None, windows=True):
-    """Rada mestskych domu s sedlovymi strechami."""
+def roofline(x0, x1, hmin, hmax, unit, windows=True):
+    """Rada domu se strechami. Kazdy dum sahá az na WL."""
     body, wins = [], []
     x = x0
     while x < x1:
         w = random.randint(*unit)
         if x + w > x1:
             w = x1 - x
-        if w < 22:
+        if w < 16:
             break
-        h = random.randint(hmin, hmax)
-        top = base - h
-        roof = random.randint(14, 30)
-        body.append('M%g %g V%g l%g %g l%g %g V%g Z' % (
-            x, base, top, w / 2.0, -roof, w / 2.0, roof, base))
-        # komin
-        if random.random() < .45:
-            cw, ch = 7, random.randint(14, 24)
-            cx = x + w * random.choice([.24, .72])
-            body.append('M%g %g h%g v%g h%g Z' % (cx, top - roof * .4, cw, -ch, -cw))
-        if windows and w > 34 and h > 44:
-            cols = max(1, int((w - 16) // 20))
-            rows = max(1, int((h - 22) // 26))
-            wins.append(window_grid(x + 10, top + 16, cols, rows, 20, 26, 8, 12, .5))
-        x += w + random.randint(2, 9)
+        base = terrain(x + w / 2.0)
+        top = base - random.randint(hmin, hmax)
+        style = random.random()
+        if style < .62:                                  # sedlova strecha
+            roof = random.randint(8, 16)
+            body.append('M%g %g V%g l%g %g l%g %g V%g Z'
+                        % (x, WL, top, w / 2.0, -roof, w / 2.0, roof, WL))
+            ridge = top - roof
+        elif style < .84:                                # plocha s rimsou
+            body.append('M%g %g V%g h%g V%g Z' % (x, WL, top, w, WL))
+            body.append('M%g %g h%g v-5h%g Z' % (x - 2, top, w + 4, -(w + 4)))
+            ridge = top
+        else:                                            # vezicka
+            body.append('M%g %g V%g h%g V%g Z' % (x, WL, top, w, WL))
+            tw = max(8, w * .3)
+            tx = x + (w - tw) / 2.0
+            body.append('M%g %g v%g h%g v%g Z' % (tx, top, -22, tw, 22))
+            body.append('M%g %g l%g %g l%g %g Z' % (tx, top - 22, tw / 2.0, -16, tw / 2.0, 16))
+            ridge = top - 38
+        if random.random() < .3:
+            cw = 4
+            cx = x + w * random.choice([.22, .74])
+            body.append('M%g %g h%g v%g h%g Z' % (cx, ridge + 6, cw, -random.randint(9, 16), -cw))
+        if windows and w > 26 and base - top > 40:
+            cols = max(1, int((w - 10) // 13))
+            rows = max(1, int((base - top - 20) // 19))
+            wins.append(lit(x + 6, top + 14, cols, rows, 13, 19, 4, 6, .34))
+        x += w + random.randint(1, 5)
     g = '<path d="%s"/>' % "".join(body)
     if wins:
         g += '<g fill="%s">%s</g>' % (GLOW, "".join(wins))
     return g
 
 
-# ---------------------------------------------------------------- obloha
+def ground(offset=0):
+    p = ["M0 %d" % WL]
+    for x, y in TERRAIN:
+        p.append("L%g %g" % (x, max(0, y - offset)))
+    p.append("L%d %d Z" % (W, WL))
+    return " ".join(p)
+
+
+# ------------------------------------------------------------------ obloha
 a('<rect width="%d" height="%d" fill="url(#sky)"/>' % (W, H))
 
-stars = []
-for _ in range(150):
-    sx = random.uniform(0, W)
-    sy = random.uniform(20, 330)
-    r = random.choice([1.4, 1.8, 2.2, 2.8])
-    stars.append('<circle cx="%.0f" cy="%.0f" r="%.1f" opacity="%.2f"/>' % (
-        sx, sy, r, random.uniform(.18, .6)))
-a('<g fill="#EBD292">%s</g>' % "".join(stars))
+st = []
+for _ in range(110):
+    st.append('<circle cx="%.0f" cy="%.0f" r="%.1f" opacity="%.2f"/>'
+              % (random.uniform(0, W), random.uniform(16, 300),
+                 random.choice([1.2, 1.6, 2.0]), random.uniform(.12, .4)))
+a('<g fill="%s">%s</g>' % (GLOW, "".join(st)))
 
-# mesic
-a('<g><circle cx="1180" cy="150" r="96" fill="#EBD292" opacity=".07"/>'
-  '<circle cx="1180" cy="150" r="58" fill="#EBD292" opacity=".13"/>'
-  '<circle cx="1180" cy="150" r="30" fill="#F6E7BE" opacity=".85"/>'
-  '<circle cx="1166" cy="140" r="30" fill="url(#sky)" opacity=".55"/></g>')
+a('<g><circle cx="1180" cy="140" r="76" fill="%s" opacity=".05"/>'
+  '<circle cx="1180" cy="140" r="42" fill="%s" opacity=".1"/>'
+  '<circle cx="1180" cy="140" r="24" fill="#F8EDD2" opacity=".75"/>'
+  '<circle cx="1169" cy="132" r="24" fill="url(#sky)" opacity=".5"/></g>' % (GLOW, GLOW))
 
-# ------------------------------------------------------- vzdalene vrstvy
-hills = ['M0 %d' % WL, 'V486']
-x = 0
-while x < W:
-    step = random.randint(230, 420)
-    y = random.randint(452, 512)
-    hills.append('L%d %d' % (min(x + step, W), y))
-    x += step
-hills.append('L%d %d Z' % (W, WL))
-a('<path d="%s" fill="%s" opacity=".5"/>' % (" ".join(hills), FAR))
+# opar nad horizontem
+a('<rect y="430" width="%d" height="180" fill="url(#haze)"/>' % W)
 
-a('<g fill="%s" opacity=".62">%s</g>' % (FAR, townhouses(0, W, 512, 34, 82, (34, 62), windows=False)))
+# ------------------------------------------------------- vzdusna perspektiva
+a('<path d="%s" fill="%s" opacity=".34"/>' % (ground(46), HAZE))
+a('<g fill="%s" opacity=".32">%s</g>' % (FAR, roofline(0, W, 22, 62, (22, 40), windows=False)))
+a('<path d="%s" fill="%s" opacity=".55"/>' % (ground(0), FAR))
+a('<g fill="%s" opacity=".62">%s</g>' % (MID, roofline(0, W, 30, 78, (24, 46), windows=False)))
 
-# ------------------------------------------------------------- SKYLINE
+# ------------------------------------------------------------------ skyline
 sky = []
 s = sky.append
 
-# --- mestska zastavba mezi dominantami
 s('<g fill="%s">' % MID)
-for x0, x1 in [(0, 240), (800, 1040), (1830, 2170), (3060, 3180), (3620, 3780), (4160, 4460), (5080, W)]:
-    s(townhouses(x0, x1, WL, 56, 128))
+for x0, x1 in [(0, 220), (790, 1030), (1900, 2120), (2930, 3090),
+               (3490, 3690), (4010, 4360), (5080, W)]:
+    s(roofline(x0, x1, 44, 104, (26, 48)))
 s('</g>')
 
 s('<g fill="%s">' % NEAR)
 
-# --- CECHUV MOST  (x 250..790)
-s('<path fill-rule="evenodd" d="M244 502h552v98H244z'
-  'M282 600a68 56 0 0 1 136 0z'
-  'M452 600a68 56 0 0 1 136 0z'
-  'M622 600a68 56 0 0 1 136 0z"/>')
-for px in (262, 432, 602, 772):
-    s('<path d="M%g 502v-64h16v64z"/>' % px)
-    s('<path d="M%g 438l8-22 8 22z"/>' % px)
-    s('<path d="M%g 424c-10-6-16-16-14-26 6 6 12 9 22 9s16-3 22-9c2 10-4 20-14 26z"/>' % (px - 6))
-s('<g fill="%s">' % GLOW)
-for px in (347, 517, 687):
-    s('<circle cx="%g" cy="470" r="7" opacity=".5"/>' % px)
-    s('<rect x="%g" y="470" width="4" height="32" opacity=".28"/>' % (px - 2))
+# --- Cechuv most
+s('<path fill-rule="evenodd" d="M240 508h520v92H240z'
+  'M276 600a62 52 0 0 1 124 0z'
+  'M438 600a62 52 0 0 1 124 0z'
+  'M600 600a62 52 0 0 1 124 0z"/>')
+for px in (252, 414, 576, 740):
+    s('<path d="M%g 508v-44h11v44z"/>' % px)
+    s('<path d="M%g 464l5.5-13 5.5 13z"/>' % px)
+
+# --- Prazsky hrad, plato 472
+s('<path d="M1070 %d V472h640v%d z"/>' % (WL, WL - 472))
+s('<path d="M1062 472h656v-13h-656z"/>')
+s('<path d="M1290 %d V352h182v%d z"/>' % (WL, WL - 352))
+s('<path d="M1284 352l91-38 91 38z"/>')
+for tx in (1296, 1428):
+    s('<path d="M%g %d V244h42v%d z"/>' % (tx, WL, WL - 244))
+    s('<path d="M%g 244l21-70 21 70z"/>' % tx)
+s('<path d="M1496 %d V284h52v%d z"/>' % (WL, WL - 284))
+s('<path d="M1490 284l31-42 31 42z"/>')
+s('<path d="M1514 242v-12h14v12z"/><path d="M1517 230l4-16 4 16z"/>')
+for bx in range(1084, 1284, 38):
+    s('<path d="M%g 472v-40h7v40z"/>' % bx)
+
+# --- Karluv most
+s('<path fill-rule="evenodd" d="M2150 %d h760v100h-760z'
+  'M2192 600a46 56 0 0 1 92 0z'
+  'M2304 600a46 56 0 0 1 92 0z'
+  'M2416 600a46 56 0 0 1 92 0z'
+  'M2528 600a46 56 0 0 1 92 0z'
+  'M2640 600a46 56 0 0 1 92 0z'
+  'M2752 600a46 56 0 0 1 92 0z"/>' % (WL - 100))
+s('<path d="M2154 500V312h72v188z"/>')
+s('<path d="M2148 312l42-62 42 62z"/>')
+s('<path d="M2184 250v-26h10v26z"/>')
+s('<path d="M2180 500v-60a10 10 0 0 1 20 0v60z" fill="%s"/>' % DARK)
+s('<path d="M2828 500V330h58v170z"/>')
+s('<path d="M2822 330l35-50 35 50z"/>')
+s('<path d="M2896 500V388h42v112z"/>')
+s('<path d="M2890 388l26-36 26 36z"/>')
+s('<path d="M2884 500v-34a24 21 0 0 1 48 0v34z"/>')
+s('<path d="M2896 500v-24a11 9 0 0 1 22 0v24z" fill="%s"/>' % DARK)
+for sx in range(2258, 2810, 58):
+    s('<path d="M%g 500v-19a5 5 0 0 1 10 0v19z"/>' % sx)
+
+# --- Narodni divadlo
+s('<path d="M3120 %d V430h340v%d z"/>' % (WL, WL - 430))
+s('<path d="M3150 430v-32h280v32z"/>')
+s('<path d="M3144 398l50-27 192 0 50 27z"/>')
+s('<path d="M3128 430v-38h38v38z"/><path d="M3436 430v-38h38v38z"/>')
+
+# --- Tancici dum
+s('<path d="M3752 %d V414h132v%d z"/>' % (WL, WL - 414))
+s('<path d="M3744 414h148v-14h-148z"/>')
+s('<path d="M3664 %d c7-84 50-113 41-170-5-37 19-56 51-51v221z"/>' % WL)
+s('<ellipse cx="3818" cy="392" rx="50" ry="11"/>')
+
+# --- Vysehrad, plato 462
+s('<path d="M4530 %d V462h400v%d z"/>' % (WL, WL - 462))
+s('<path d="M4522 462h416v-12h-416z"/>')
+s('<path d="M4600 %d V376h224v%d z"/>' % (WL, WL - 376))
+s('<path d="M4594 376l118-32 118 32z"/>')
+for tx in (4636, 4756):
+    s('<path d="M%g %d V286h32v%d z"/>' % (tx, WL, WL - 286))
+    s('<path d="M%g 286l16-80 16 80z"/>' % tx)
+for bx in range(4544, 4930, 30):
+    s('<path d="M%g 450v-14h15v14z"/>' % bx)
+
 s('</g>')
 
-# --- PRAZSKY HRAD  (x 1050..1800)
-s('<path d="M1010 600l110-140 690-10 90 150z"/>')
-s('<path d="M1094 600V462h672v138z"/>')          # palac
-s('<path d="M1086 462h688v-20h-688z"/>')          # rimsa
-s('<path d="M1086 442h688v-10h-688z"/>')
-# katedrala sv. Vita
-s('<path d="M1296 462V330h206v132z"/>')           # hlavni lod
-s('<path d="M1290 330l106-46 106 46z"/>')         # strecha
-s('<path d="M1394 284v-30h8v30z"/>')
-# zapadni veze
-for tx in (1300, 1452):
-    s('<path d="M%g 336V210h50v126z"/>' % tx)
-    s('<path d="M%g 210l25-84 25 84z"/>' % tx)
-    s('<path d="M%g 126v-26h6v26z"/>' % (tx + 22))
-# velka jizni vez
-s('<path d="M1530 462V254h62v208z"/>')
-s('<path d="M1524 254l37-52 37 52z"/>')
-s('<path d="M1552 202v-16h18v16z"/><path d="M1557 186l4-22 4 22z"/>')
-# opery
-for bx in range(1112, 1290, 42):
-    s('<path d="M%g 462v-54h9v54z"/>' % bx)
+# svetla v dominantach, drobna a ridka
 s('<g fill="%s">' % GLOW)
-s('<circle cx="1399" cy="386" r="21" opacity=".3"/>')
-s('<circle cx="1399" cy="386" r="13" opacity=".45"/>')
-s(window_grid(1120, 488, 12, 3, 42, 34, 12, 20, .7))
-s(window_grid(1600, 488, 4, 3, 42, 34, 12, 20, .7))
-s('<path d="M1318 372h14v34a7 7 0 0 0-14 0z" opacity=".38"/>')
-s('<path d="M1470 372h14v34a7 7 0 0 0-14 0z" opacity=".38"/>')
-s('</g>')
-
-# --- PETRINSKA ROZHLEDNA (x 1900)
-s('<path d="M1840 600l150-128 160 128z"/>')
-s('<path d="M2040 474l-9-118h-24l-9 118h10l7-110h8l7 110z"/>')
-s('<path d="M2004 356h48v-20h-48z"/>')
-s('<path d="M2018 336v-22h20v22z"/><path d="M2024 314l4-20 4 20z"/>')
-s('<path d="M2000 410h56v6h-56z"/><path d="M2006 442h44v6h-44z"/>')
-
-# --- KARLUV MOST (x 2260..3020)
-s('<path fill-rule="evenodd" d="M2250 494h790v106h-790z'
-  'M2300 600a52 64 0 0 1 104 0z'
-  'M2424 600a52 64 0 0 1 104 0z'
-  'M2548 600a52 64 0 0 1 104 0z'
-  'M2672 600a52 64 0 0 1 104 0z'
-  'M2796 600a52 64 0 0 1 104 0z'
-  'M2920 600a52 64 0 0 1 104 0z"/>')
-# Staromestska mostecka vez
-s('<path d="M2256 494V286h84v208z"/>')
-s('<path d="M2248 286l50-74 50 74z"/>')
-s('<path d="M2244 292h12v-30l6-14 6 14v30h12z"/>')
-s('<path d="M2336 292h12v-30l6-14 6 14v30h12z"/>')
-s('<path d="M2292 212v-34h12v34z"/>')
-s('<path d="M2286 494v-72a12 12 0 0 1 24 0v72z" fill="%s"/>' % DARK)
-# Malostranske veze
-s('<path d="M2952 494V300h70v194z"/>')
-s('<path d="M2944 300l43-62 43 62z"/>')
-s('<path d="M2940 306h10v-26l5-12 5 12v26h10z"/>')
-s('<path d="M3016 306h10v-26l5-12 5 12v26h10z"/>')
-s('<path d="M3034 494V368h52v126z"/>')
-s('<path d="M3028 368l32-44 32 44z"/>')
-s('<path d="M3022 494v-44a30 26 0 0 1 60 0v44z"/>')
-s('<path d="M3038 494v-30a14 12 0 0 1 28 0v30z" fill="%s"/>' % DARK)
-# sochy na zabradli
-for sx in range(2372, 2940, 62):
-    s('<path d="M%g 494v-24a6 6 0 0 1 12 0v24z"/>' % sx)
-s('<g fill="%s">' % GLOW)
-s('<path d="M2288 330h16v26h-16z" opacity=".35"/>')
-s('<path d="M2978 344h16v24h-16z" opacity=".35"/>')
-for lx in range(2340, 2960, 124):
-    s('<circle cx="%g" cy="480" r="5" opacity=".45"/>' % lx)
-s('</g>')
-
-# --- NARODNI DIVADLO (x 3220..3600)
-s('<path d="M3220 600V418h370v182z"/>')
-s('<path d="M3252 418v-40h306v40z"/>')
-s('<path d="M3246 378l58-34h202l58 34z"/>')
-s('<path d="M3228 418v-46h44v46z"/><path d="M3538 418v-46h44v46z"/>')
-# kvadrigy
-for qx in (3232, 3542):
-    s('<path d="M%g 372c6-14 14-18 22-18 6 0 10 4 14 4s6-6 4-12c8 4 12 12 8 22z"/>' % qx)
-s('<g fill="%s">' % GLOW)
-for wx in range(3244, 3570, 34):
-    s('<path d="M%g 452h18v42a9 9 0 0 0-18 0z" opacity="%.2f"/>' % (wx, random.choice([.3, .45, .6])))
-s('</g>')
-
-# --- TANCICI DUM (x 3820..4110)
-s('<path d="M3946 600V398h150v202z"/>')
-s('<path d="M3938 398h166v-18h-166z"/>')
-s('<path d="M3846 600c8-96 56-128 46-192-6-42 22-64 58-58v250z"/>')
-s('<ellipse cx="4020" cy="372" rx="58" ry="14"/>')
-s('<path d="M4012 372v-26h16v26z"/>')
-s('<g fill="%s">' % GLOW)
-for r in range(6):
-    for c in range(4):
-        s('<rect x="%g" y="%g" width="14" height="10" opacity="%.2f"/>' % (
-            3958 + c * 34, 418 + r * 30, random.choice([.22, .34, .5])))
+s('<circle cx="1375" cy="404" r="11" opacity=".22"/>')
+s(lit(1090, 496, 14, 2, 38, 30, 6, 10, .5))
+s(lit(1560, 496, 3, 2, 38, 30, 6, 10, .5))
+s('<rect x="2172" y="352" width="9" height="14" opacity=".28"/>')
+s('<rect x="2846" y="366" width="9" height="13" opacity=".28"/>')
+for wx in range(3146, 3450, 30):
+    s('<path d="M%g 462h13v30a6.5 6.5 0 0 0-13 0z" opacity="%.2f"/>'
+      % (wx, random.choice([.2, .3, .42])))
 for r in range(5):
-    s('<rect x="%g" y="%g" width="12" height="9" opacity=".26"/>' % (3878 + r * 3, 446 + r * 30))
+    for c in range(4):
+        s('<rect x="%g" y="%g" width="9" height="7" opacity="%.2f"/>'
+          % (3766 + c * 30, 432 + r * 27, random.choice([.16, .26, .36])))
+s(lit(4618, 392, 5, 1, 40, 26, 8, 14, .7))
+s('<circle cx="4712" cy="410" r="9" opacity=".22"/>')
 s('</g>')
-
-# --- VYSEHRAD (x 4520..5100)
-s('<path d="M4470 600l170-158 400-14 130 172z"/>')
-s('<path d="M4640 442h396v-16h-396z"/>')
-s('<path d="M4700 426V352h250v74z"/>')            # bazilika lod
-s('<path d="M4694 352l131-40 131 40z"/>')
-for tx in (4744, 4872):
-    s('<path d="M%g 356V246h40v110z"/>' % tx)
-    s('<path d="M%g 246l20-102 20 102z"/>' % tx)
-    s('<path d="M%g 144v-22h4v22z"/>' % (tx + 18))
-# hradby
-for bx in range(4660, 5030, 34):
-    s('<path d="M%g 426v-20h18v20z"/>' % bx)
-s('<g fill="%s">' % GLOW)
-s('<circle cx="4825" cy="392" r="15" opacity=".32"/>')
-s('<path d="M4756 288h14v22h-14z" opacity=".3"/>')
-s('<path d="M4884 288h14v22h-14z" opacity=".3"/>')
-s(window_grid(4720, 372, 5, 1, 44, 30, 12, 22, .8))
-s('</g>')
-
-s('</g>')  # /NEAR
 
 skyline = "".join(sky)
-
-# ------------------------------------------------------------- vystup
 a('<g id="skyline">%s</g>' % skyline)
-
-# odraz ve vode
 a('<use href="#skyline" transform="translate(0 1200) scale(1 -1)" '
-  'opacity=".22" mask="url(#reflFade)"/>')
+  'opacity=".16" mask="url(#reflFade)"/>')
 
-# nabrezni zed a lampy
-a('<path d="M0 %d h%d v22H0z" fill="%s"/>' % (WL - 22, W, DARK))
+# nabrezni lampy, drobne
 lamps = []
-for lx in range(70, W, 176):
-    lamps.append('<rect x="%g" y="%g" width="5" height="30" opacity=".35"/>' % (lx, WL - 52))
-    lamps.append('<circle cx="%g" cy="%g" r="6" opacity=".55"/>' % (lx + 2.5, WL - 56))
-    lamps.append('<circle cx="%g" cy="%g" r="16" opacity=".12"/>' % (lx + 2.5, WL - 56))
+for lx in range(120, W, 240):
+    lamps.append('<rect x="%g" y="%g" width="2.5" height="17" opacity=".22"/>' % (lx, WL - 30))
+    lamps.append('<circle cx="%g" cy="%g" r="2.6" opacity=".42"/>' % (lx + 1.25, WL - 32))
+    lamps.append('<circle cx="%g" cy="%g" r="7" opacity=".07"/>' % (lx + 1.25, WL - 32))
 a('<g fill="%s">%s</g>' % (GLOW, "".join(lamps)))
+
+a('<rect y="%d" width="%d" height="10" fill="%s"/>' % (WL - 10, W, DARK))
 
 # voda
 a('<rect y="%d" width="%d" height="%d" fill="url(#water)"/>' % (WL, W, H - WL))
 shim = []
-for i in range(70):
-    sx = random.uniform(0, W)
-    sy = random.uniform(WL + 12, H - 14)
-    lw = random.uniform(30, 150)
-    shim.append('<rect x="%.0f" y="%.0f" width="%.0f" height="2" opacity="%.2f"/>' % (
-        sx, sy, lw, random.uniform(.04, .16)))
-a('<g fill="#EBD292">%s</g>' % "".join(shim))
+for _ in range(48):
+    shim.append('<rect x="%.0f" y="%.0f" width="%.0f" height="1.5" opacity="%.2f"/>'
+                % (random.uniform(0, W), random.uniform(WL + 16, H - 18),
+                   random.uniform(24, 110), random.uniform(.03, .1)))
+a('<g fill="%s">%s</g>' % (GLOW, "".join(shim)))
 
 defs = (
   '<defs>'
   '<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">'
-  '<stop offset="0%%" stop-color="#061725"/>'
-  '<stop offset="46%%" stop-color="#0e3346"/>'
-  '<stop offset="82%%" stop-color="#1d5567"/>'
-  '<stop offset="100%%" stop-color="#2c7183"/></linearGradient>'
+  '<stop offset="0%%" stop-color="%s"/><stop offset="52%%" stop-color="%s"/>'
+  '<stop offset="100%%" stop-color="%s"/></linearGradient>'
+  '<linearGradient id="haze" x1="0" y1="0" x2="0" y2="1">'
+  '<stop offset="0%%" stop-color="%s" stop-opacity="0"/>'
+  '<stop offset="100%%" stop-color="%s" stop-opacity=".5"/></linearGradient>'
   '<linearGradient id="water" x1="0" y1="0" x2="0" y2="1">'
-  '<stop offset="0%%" stop-color="#07202c"/>'
-  '<stop offset="100%%" stop-color="#04121a"/></linearGradient>'
+  '<stop offset="0%%" stop-color="#0b2a38"/><stop offset="100%%" stop-color="#061a24"/></linearGradient>'
   '<linearGradient id="reflGrad" x1="0" y1="%d" x2="0" y2="%d" gradientUnits="userSpaceOnUse">'
-  '<stop offset="0" stop-color="#fff" stop-opacity=".55"/>'
+  '<stop offset="0" stop-color="#fff" stop-opacity=".45"/>'
   '<stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>'
   '<mask id="reflFade"><rect y="%d" width="%d" height="%d" fill="url(#reflGrad)"/></mask>'
-  '</defs>' % (WL, H, WL, W, H - WL)
+  '</defs>' % (SKY_TOP, SKY_MID, SKY_HOR, HAZE, HAZE, WL, H, WL, W, H - WL)
 )
 
 svg = ('<svg class="pano" viewBox="0 0 %d %d" preserveAspectRatio="xMinYMax slice" aria-hidden="true">'
        % (W, H)) + defs + "".join(out) + '</svg>'
 
-io.open('pano.svg', 'w', encoding='utf-8').write(svg)
-print('OK, delka:', len(svg))
+if __name__ == "__main__":
+    root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+    target = os.path.join(root, "index.html")
+    t = io.open(target, encoding="utf-8").read()
+    t, k = re.subn(r'<svg class="pano".*?</svg>', lambda m: svg, t, flags=re.S)
+    if not k:
+        sys.exit("pano svg nenalezeno v index.html")
+    io.open(target, "w", encoding="utf-8", newline="").write(t)
+    print("index.html prepsan, delka svg:", len(svg))
