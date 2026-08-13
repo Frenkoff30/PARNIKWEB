@@ -100,7 +100,8 @@ def roofline(x0, x1, hmin, hmax, unit, detail=2, flat=False):
             roof = random.randint(9, 17)
             body.append('M%g %g V%g l%g %g l%g %g V%g Z'
                         % (x, WL, top, w / 2.0, -roof, w / 2.0, roof, WL))
-            chim = top - roof * .4
+            chim = top - roof * .28
+            spots = [.32, .68]
             if detail >= 1 and w > 30 and random.random() < .5:      # vikyr
                 dw = 7
                 dx = cx - dw / 2.0
@@ -118,7 +119,7 @@ def roofline(x0, x1, hmin, hmax, unit, detail=2, flat=False):
 
         elif r < .74:                                 # plocha s rimsou
             body.append('M%g %g V%g h%g V%g Z' % (x, WL, top, w, WL))
-            body.append('M%g %g h%g v-5h%g Z' % (x - 2, top, w + 4, -(w + 4)))
+            body.append('M%g %g h%g v5 h%g Z' % (x - 2, top - 5, w + 4, -(w + 4)))
             chim = top + 2
 
         elif r < .89:                                 # barokni vez s bani
@@ -139,9 +140,10 @@ def roofline(x0, x1, hmin, hmax, unit, detail=2, flat=False):
 
         if random.random() < .28:
             cw = 4
-            body.append('M%g %g h%g v%g h%g Z'
-                        % (x + w * random.choice(spots), chim, cw,
-                           -random.randint(9, 16), -cw))
+            # komin musi lezet celou sirkou nad telem domu, jinak visi pres okraj
+            cxx = min(max(x + w * random.choice(spots), x + 2), x + w - cw - 2)
+            ch = random.randint(9, 16)
+            body.append('M%g %g v%g h%g v%g Z' % (cxx, chim, -ch, cw, ch))
 
         if detail >= 2 and w > 26 and base - top > 40:
             cols = max(1, int((w - 10) // 13))
@@ -171,7 +173,8 @@ def trees(x0, x1, step=(46, 78)):
     while x < x1:
         h = random.randint(26, 44)
         ty = WL - 12 - h
-        s.append('<rect x="%g" y="%g" width="3" height="%g"/>' % (x - 1.5, ty + h * .55, h * .5))
+        ty0 = ty + h * .55
+        s.append('<rect x="%g" y="%g" width="3" height="%g"/>' % (x - 1.5, ty0, WL - ty0))
         for dx, dy, rr in ((0, 0, h * .42), (-h * .26, h * .14, h * .3),
                            (h * .26, h * .12, h * .32), (0, h * .3, h * .3)):
             s.append('<circle cx="%g" cy="%g" r="%g"/>' % (x + dx, ty + dy, rr))
@@ -266,7 +269,6 @@ s('<path d="M1370 304v-26h9v26z"/>')
 for tx in (1294, 1430):
     s('<path d="M%g %d V232h44v%d z"/>' % (tx, WL, WL - 232))
     s('<path d="M%g 232h-5l27-88 27 88h-5z"/>' % tx)
-    s('<path d="M%g 144v-22h5v22z"/>' % (tx + 20))
 s('<path d="M1500 %d V286h58v%d z"/>' % (WL, WL - 286))
 s('<path d="M1494 286h70v-12h-70z"/>')
 s('<path d="%s"/>' % onion(1529, 274, 46))
@@ -287,8 +289,8 @@ s('<path d="M2183 252v-30h10v30z"/>')
 s('<path d="M2176 499v-64a12 12 0 0 1 24 0v64z" fill="%s"/>' % DARK)
 s('<path d="M2842 499V334h62v165z"/>')
 s('<path d="M2836 334l37-54 37 54z"/>')
-s('<path d="M2906 499V392h46v107z"/>')
-s('<path d="M2900 392l29-40 29 40z"/>')
+s('<path d="M2902 499V392h50v107z"/>')
+s('<path d="M2896 392l31-40 31 40z"/>')
 s('<path d="M2894 499v-36a26 22 0 0 1 52 0v36z"/>')
 s('<path d="M2906 499v-25a12 10 0 0 1 24 0v25z" fill="%s"/>' % DARK)
 for sx in range(2252, 2830, 41):
@@ -351,7 +353,7 @@ n('<use href="#skyline" transform="translate(0 1200) scale(1 -1)" opacity=".15" 
 
 lamps = []
 for lx in range(110, W, 230):
-    lamps.append('<rect x="%g" y="%g" width="2.5" height="16" opacity=".2"/>' % (lx, WL - 28))
+    lamps.append('<rect x="%g" y="%g" width="2.5" height="20" opacity=".2"/>' % (lx, WL - 30))
     lamps.append('<circle cx="%g" cy="%g" r="2.4" opacity=".4"/>' % (lx + 1.25, WL - 30))
     lamps.append('<circle cx="%g" cy="%g" r="6.5" opacity=".06"/>' % (lx + 1.25, WL - 30))
 n('<g fill="%s">%s</g>' % (GLOW, "".join(lamps)))

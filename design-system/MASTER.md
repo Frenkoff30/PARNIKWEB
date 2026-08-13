@@ -131,8 +131,17 @@ v `index.html`, skript se pouští jen když se panorama mění.
 
 Pravidlo, které drží realističnost: **nic nelevituje**. Terén je funkce
 `terrain(x)` a každá stavba se kreslí od střechy až na hladinu, takže mezi ní
-a zemí nemůže vzniknout mezera. Komín patří vždy na hlavní tělo domu, nikdy
-k hřebeni věžičky.
+a zemí nemůže vzniknout mezera. Komín patří vždy na hlavní tělo domu (nikdy
+k hřebeni věžičky) a je zaříznutý do jeho půdorysu.
+
+**Směr vinutí cest.** Všechny podcesty jednoho `<path>` musí obíhat stejným
+směrem. Při výchozím `fill-rule: nonzero` se překryv dvou opačně vinutých
+tvarů vyruší na díru, takže se komín opticky odtrhne od střechy, přestože
+souřadnice sedí. Tělo domu jde nahoru, doprava, dolů; komín i římsa stejně.
+
+Kontroluje se to rasterizací: vrstva se vykreslí na canvas, z dolní řady se
+pustí flood fill a cokoliv, co jím nebylo dosaženo, nedrží se zemí. Bounding
+boxy na to nestačí, ty souvislost neuvidí.
 
 **Předěly sekcí.** Jediná vlna v celém webu je maskovaná křivka `cut--*`
 mezi sekcemi. Její výška je v tokenu `--cut-h` a připočítává se k hornímu
