@@ -20,6 +20,8 @@
   --gutter:clamp(1.25rem, 4vw, 3rem);
   --sec-y:clamp(3.75rem, 8vh, 6.5rem);
 
+  --cut-h:clamp(44px,6vw,96px);
+
   --r-sm:4px;
   --r:10px;
   --r-lg:20px;
@@ -122,7 +124,7 @@ section[id],[id]{scroll-margin-top:88px}
 }
 .rail__boat{
   position:absolute; top:-9px; left:0; color:var(--brass);
-  transform:translateX(-50%); will-change:transform;
+  will-change:transform;
   filter:drop-shadow(0 2px 6px rgba(0,0,0,.5));
 }
 .rail__boat svg{width:30px;height:18px}
@@ -253,21 +255,9 @@ section[id],[id]{scroll-margin-top:88px}
 .menu__foot a{font-variant-numeric:tabular-nums; transition:color var(--t)}
 .menu__foot a:hover{color:var(--brass-lt)}
 
-.waves{
-  position:absolute; left:0; right:0; bottom:0;
-  height:clamp(92px,13vh,150px);
-  pointer-events:none; overflow:hidden; z-index:1;
-}
-/* max-width:none rusi globalni reset img,svg{max-width:100%}, ktery by srazil
-   sirku zpet na 100 %. Vlny jsou staticke, zadny posun. */
-.waves svg{position:absolute; left:0; bottom:0; width:100%; max-width:none; height:100%}
-.waves__a{fill:var(--deep); opacity:.85}
-.waves__b{fill:var(--vltava); opacity:.4}
-
-
 .hero{
   position:relative; min-height:100svh; display:flex; align-items:flex-end;
-  padding:9rem 0 clamp(11rem,22vh,16rem);
+  padding:9rem 0 clamp(6rem,14vh,10rem);
   overflow:hidden; isolation:isolate; background:var(--night);
 }
 .hero__photo{position:absolute; inset:0; z-index:-3}
@@ -312,20 +302,13 @@ section[id],[id]{scroll-margin-top:88px}
 }
 .hero__facts dd{margin:0; font-family:var(--ff-display); font-size:1.15rem; font-weight:500}
 
-.hero__deck{
-  position:absolute; left:-2%; right:-2%; bottom:0; z-index:3;
-  height:clamp(84px,12.5vh,140px); pointer-events:none;
-}
-.hero__deck svg{width:100%; height:100%}
-.sway{transform-origin:50% 100%; animation:sway 9s ease-in-out infinite}
-@keyframes sway{
-  0%,100%{transform:rotate(-.3deg) translateY(0)}
-  50%{transform:rotate(.3deg) translateY(-4px)}
-}
 
-.waves--hero{opacity:.85}
 
 .section{position:relative; padding-block:var(--sec-y); overflow:hidden}
+/* Vlnovy predel prekryva horni okraj sekce, proto se jeho vyska pripocita
+   k odsazeni. Jinak nadpis zacina hned pod krivkou. */
+.section[class*="cut--"]{padding-top:calc(var(--sec-y) + var(--cut-h) * .85)}
+.ctaband[class*="cut--"]{padding-top:calc(clamp(4rem,8vw,6.5rem) + var(--cut-h) * .85)}
 .section--tight{padding-top:0}
 .section--day{background:var(--cream); color:var(--ink)}
 .section--light{background:var(--white); color:var(--ink)}
@@ -335,7 +318,7 @@ section[id],[id]{scroll-margin-top:88px}
 [class*="cut--"]{position:relative}
 [class*="cut--"]::before{
   content:''; position:absolute; inset:0 0 auto 0;
-  height:clamp(44px,6vw,96px); z-index:2; pointer-events:none;
+  height:var(--cut-h); z-index:2; pointer-events:none;
   --wm:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath d='M0 0h1440v52c-150 36-290-12-450-12s-260 46-420 42S150 44 0 66z' fill='%23fff'/%3E%3C/svg%3E");
   -webkit-mask:var(--wm) bottom/100% 100% no-repeat;
   mask:var(--wm) bottom/100% 100% no-repeat;
@@ -461,7 +444,7 @@ section[id],[id]{scroll-margin-top:88px}
 }
 
 .route__head{
-  position:absolute; top:clamp(5.5rem,12vh,8rem); left:0; right:0; z-index:4;
+  position:absolute; top:clamp(6.5rem,14vh,9.5rem); left:0; right:0; z-index:4;
   max-width:var(--maxw); margin-inline:auto; padding-inline:var(--gutter);
   pointer-events:none;
 }
@@ -937,7 +920,8 @@ a.contactcard__row:hover{color:var(--brass-lt); padding-left:.35rem}
 .footer__barin p{margin:0; font-size:.82rem; color:var(--cream-2); opacity:.75}
 .footer__langs{display:flex; gap:.25rem}
 .footer__langs a{
-  padding:.25rem .6rem; font-size:.72rem; font-weight:600; letter-spacing:.1em;
+  display:inline-flex; align-items:center; min-height:26px;
+  padding:.3rem .7rem; font-size:.72rem; font-weight:600; letter-spacing:.1em;
   border:1px solid rgba(201,162,39,.25); border-radius:2px;
   transition:border-color var(--t), color var(--t), background-color var(--t);
 }
@@ -952,7 +936,7 @@ a.contactcard__row:hover{color:var(--brass-lt); padding-left:.35rem}
     transition-duration:.01ms !important;
   }
   .js .reveal{opacity:1 !important; transform:none !important}
-  .sway,.compass,.smoke,.route__boat{
+  .compass,.route__boat,.boat__smoke ellipse{
   position:absolute; left:0; right:0; margin-inline:auto; bottom:11%;
   width:clamp(160px,18vw,260px); z-index:3;
   filter:drop-shadow(0 18px 26px rgba(0,0,0,.45));
@@ -969,7 +953,7 @@ a.contactcard__row:hover{color:var(--brass-lt); padding-left:.35rem}
 }
 
 @media print{
-  .rail,.chapters,.bridge,.menu,.route,.waves{display:none !important}
+  .rail,.chapters,.bridge,.menu,.route{display:none !important}
   body{background:#fff; color:#000}
   .section{padding-block:1.5rem}
 }

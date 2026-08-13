@@ -48,11 +48,8 @@ Zbytek je na prokliky, aby web zůstal přehledný.
 | Klíčové efekty | Vrstvený parallax, sticky horizontální panorama, SVG vlny, mosazný lesk, portholes, houpání paluby |
 
 **Signature detaily**
-* `.hero__deck` silueta zábradlí (mosazné madlo, teakový čepec, sloupky) v popředí hera
-* `.sway` houpání 0,3 stupně za 9 s, jen na popředí hera, vypnuto při `reduced-motion`
 * `.porthole` kruhová maska s mosazným prstencem
 * `.rivets` nýty na mosazné liště přes `repeating-radial-gradient`
-* `.waves` dvě statické vrstvy SVG vln na spodní hraně hera
 * `[class*="cut--"]` vlnový předěl mezi sekcemi přes `mask`, barvu bere z tokenu
 * `.btn--brass::after` přejezd lesku přes CTA a certifikát
 
@@ -137,9 +134,9 @@ Pravidlo, které drží realističnost: **nic nelevituje**. Terén je funkce
 a zemí nemůže vzniknout mezera. Komín patří vždy na hlavní tělo domu, nikdy
 k hřebeni věžičky.
 
-**Vlny.** Statické, bez posunu, jen na spodní hraně hera. Cesty generuje
-`scripts/waves.py`; ruční `s` segmenty se rozbíjejí příliš snadno. Patička wave
-nemá, předěl dělá mosazná linka a tmavší podklad.
+**Předěly sekcí.** Jediná vlna v celém webu je maskovaná křivka `cut--*`
+mezi sekcemi. Její výška je v tokenu `--cut-h` a připočítává se k hornímu
+odsazení sekce, jinak by nadpis začínal těsně pod křivkou.
 
 ## 9. Odchylky od vygenerovaného systému
 

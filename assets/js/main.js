@@ -106,7 +106,9 @@
     var docH = document.documentElement.scrollHeight - window.innerHeight;
     var p = docH > 0 ? clamp(y / docH, 0, 1) : 0;
     if (railFill) railFill.style.transform = 'scaleX(' + p + ')';
-    if (railBoat) railBoat.style.transform = 'translateX(calc(' + (p * 100) + 'vw - 50%))';
+    /* clamp drzi parnik cely uvnitr okna i na krajich listy */
+    if (railBoat) railBoat.style.transform =
+      'translateX(clamp(0px, calc(' + (p * 100) + 'vw - 15px), calc(100vw - 30px)))';
     if (bridge) bridge.classList.toggle('is-stuck', y > 40);
   }
 
