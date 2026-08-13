@@ -1,16 +1,19 @@
 :root{
-  --night:#0C2129;
-  --hull:#12303C;
-  --deep:#1A4757;
-  --vltava:#256B7E;
+  /* Tmave tony jsou o stupen svetlejsi nez puvodne, aby stranka drzela krok
+     s modrou hodinou v panoramatu. --night 12,33,41 -> 19,55,70; kde se
+     stejna barva pouziva pres rgba(), plati stejna trojice. */
+  --night:#133746;
+  --hull:#1A4757;
+  --deep:#245F74;
+  --vltava:#2E7F94;
   --brass:#C9A227;
   --brass-lt:#EBD292;
   --brass-dk:#7E6412;
   --white:#FFFFFF;
-  --cream:#F4EDE0;
-  --cream-2:#D9CEBB;
-  --ink:#0B1418;
-  --ink-2:#42555C;
+  --cream:#F8F3E9;
+  --cream-2:#E2D9C7;
+  --ink:#0E1B21;
+  --ink-2:#4B5F68;
   --teak:#7A4B2A;
 
   --ff-display:"Playfair Display", Georgia, "Times New Roman", serif;
@@ -172,7 +175,7 @@ section[id],[id]{scroll-margin-top:88px}
   opacity:0; transition:opacity var(--t);
 }
 .bridge.is-stuck{
-  background:rgba(12,33,41,.86);
+  background:rgba(19,55,70,.86);
   -webkit-backdrop-filter:saturate(160%) blur(14px);
   backdrop-filter:saturate(160%) blur(14px);
   box-shadow:0 12px 34px -22px rgba(0,0,0,.9);
@@ -236,7 +239,7 @@ section[id],[id]{scroll-margin-top:88px}
 
 .menu{
   position:fixed; inset:0; z-index:var(--z-menu);
-  background:rgba(12,33,41,.97);
+  background:rgba(19,55,70,.97);
   -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
   display:grid; place-items:center; padding:5rem var(--gutter) 2rem;
   opacity:0; transition:opacity var(--t);
@@ -262,11 +265,13 @@ section[id],[id]{scroll-margin-top:88px}
 }
 .hero__photo{position:absolute; inset:0; z-index:-3}
 .hero__photo img{width:100%; height:100%; object-fit:cover; object-position:50% 42%}
+/* Zavoj nad fotkou. Drzi kontrast pod nadpisem a vlevo, jinak nechava snimek
+   dychat; ubrana kryci sila je hlavni duvod, proc je hero svetlejsi. */
 .hero__wash{
   position:absolute; inset:0; z-index:-2;
   background:
-    linear-gradient(180deg, rgba(12,33,41,.72) 0%, rgba(12,33,41,.2) 30%, rgba(12,33,41,.56) 62%, var(--night) 95%),
-    linear-gradient(90deg, rgba(12,33,41,.72) 0%, rgba(12,33,41,.1) 58%, rgba(26,71,87,.26) 100%);
+    linear-gradient(180deg, rgba(19,55,70,.5) 0%, rgba(19,55,70,.06) 32%, rgba(19,55,70,.34) 64%, var(--night) 97%),
+    linear-gradient(90deg, rgba(19,55,70,.56) 0%, rgba(19,55,70,0) 56%, rgba(36,95,116,.14) 100%);
 }
 
 .hero__inner{
@@ -276,7 +281,7 @@ section[id],[id]{scroll-margin-top:88px}
 .hero__title{
   font-size:clamp(2.75rem,7.2vw,6.5rem);
   max-width:16ch; margin-bottom:1.5rem;
-  text-shadow:0 4px 40px rgba(12,33,41,.6);
+  text-shadow:0 4px 40px rgba(19,55,70,.6);
 }
 .hero__title span{display:block}
 .hero__title em{font-style:italic; font-weight:400; color:var(--brass-lt)}
@@ -284,23 +289,7 @@ section[id],[id]{scroll-margin-top:88px}
   max-width:52ch; font-size:clamp(1rem,.95rem + .4vw,1.2rem);
   color:var(--cream-2); margin-bottom:2.25rem;
 }
-.hero__cta{display:flex; flex-wrap:wrap; gap:.85rem; margin-bottom:3rem}
-
-.hero__facts{
-  display:flex; flex-wrap:wrap; gap:0; margin:0;
-  border-top:1px solid rgba(201,162,39,.28); padding-top:1.35rem;
-  max-width:640px;
-}
-.hero__facts > div{
-  padding-right:clamp(1.5rem,4vw,3rem); margin-right:clamp(1.5rem,4vw,3rem);
-  border-right:1px solid rgba(244,237,224,.14);
-}
-.hero__facts > div:last-child{border-right:0; margin-right:0; padding-right:0}
-.hero__facts dt{
-  font-size:.68rem; text-transform:uppercase; letter-spacing:.2em;
-  color:var(--brass); margin-bottom:.3rem;
-}
-.hero__facts dd{margin:0; font-family:var(--ff-display); font-size:1.15rem; font-weight:500}
+.hero__cta{display:flex; flex-wrap:wrap; gap:.85rem; margin:0}
 
 
 
@@ -363,7 +352,7 @@ section[id],[id]{scroll-margin-top:88px}
 }
 .ticket:hover{
   transform:translateY(-4px);
-  box-shadow:0 26px 50px -30px rgba(12,33,41,.55);
+  box-shadow:0 26px 50px -30px rgba(19,55,70,.55);
   border-color:rgba(201,162,39,.55);
 }
 .ticket:hover::before{opacity:1}
@@ -413,6 +402,12 @@ section[id],[id]{scroll-margin-top:88px}
 .ticket__link svg{color:var(--brass-dk); transition:transform var(--t)}
 .ticket__link:hover{color:var(--brass-dk)}
 .ticket__link:hover svg{transform:translateX(4px)}
+/* Roztazeny odkaz: klikaci je cela karta, ale v pruchodu tabem a pro cteciky
+   zustava jediny odkaz s citelnym textem. Proto pretahuje az sem, ne <a> kolem
+   celeho <article>. */
+.ticket__link::after{content:''; position:absolute; inset:0; border-radius:var(--r)}
+.ticket:hover .ticket__link{color:var(--brass-dk)}
+.ticket:hover .ticket__link svg{transform:translateX(4px)}
 
 .route{position:relative; background:var(--night)}
 .route__sticky{display:none}
@@ -472,12 +467,17 @@ section[id],[id]{scroll-margin-top:88px}
   50%{transform:translateY(-6px) rotate(calc(.55deg + var(--tilt,0deg)))}
 }
 .boat__smoke{opacity:var(--smoke,.3); transition:opacity 500ms linear}
-.boat__smoke ellipse{animation:smoke 3.6s linear infinite}
+/* transform-origin u SVG tvaru je jinak 0 0 celeho viewBoxu, takze scale()
+   odnese obláček od komina az k vlajce. fill-box ho drzi na miste. */
+.boat__smoke ellipse{
+  animation:smoke 3.6s linear infinite;
+  transform-box:fill-box; transform-origin:50% 100%;
+}
 .boat__smoke ellipse:nth-child(2){animation-delay:1.2s}
 .boat__smoke ellipse:nth-child(3){animation-delay:2.4s}
 @keyframes smoke{
-  0%{transform:translate(0,0) scale(.35); opacity:.55}
-  100%{transform:translate(-48px,-40px) scale(2.6); opacity:0}
+  0%{transform:translate(0,0) scale(.3); opacity:.6}
+  100%{transform:translate(-42px,-46px) scale(2.4); opacity:0}
 }
 .boat__bow{opacity:var(--wake,.25); transition:opacity 400ms linear}
 .route__wake{
@@ -506,7 +506,7 @@ section[id],[id]{scroll-margin-top:88px}
 .route__stops b{
   display:block; font-family:var(--ff-display); font-weight:600;
   font-size:clamp(1.5rem,1rem + 1.9vw,2.5rem); color:var(--cream);
-  text-shadow:0 3px 24px rgba(12,33,41,.85);
+  text-shadow:0 3px 24px rgba(19,55,70,.85);
 }
 .route__stops span{display:inline-block; margin-top:.35rem; font-size:.84rem; color:var(--cream-2)}
 
@@ -557,7 +557,7 @@ section[id],[id]{scroll-margin-top:88px}
 }
 .nextcard:hover{
   transform:translateY(-4px); border-color:rgba(201,162,39,.6);
-  box-shadow:0 26px 50px -30px rgba(12,33,41,.45);
+  box-shadow:0 26px 50px -30px rgba(19,55,70,.45);
 }
 .nextcard__img{display:block; overflow:hidden; aspect-ratio:3/2; background:var(--cream)}
 .nextcard__img img{width:100%; height:100%; object-fit:cover; transition:transform 700ms var(--ease)}
@@ -594,8 +594,8 @@ section[id],[id]{scroll-margin-top:88px}
 .phero__wash{
   position:absolute; inset:0; z-index:-2;
   background:
-    linear-gradient(180deg, rgba(12,33,41,.76) 0%, rgba(12,33,41,.28) 36%, rgba(12,33,41,.64) 76%, var(--night) 98%),
-    linear-gradient(90deg, rgba(12,33,41,.7), rgba(12,33,41,.08) 68%);
+    linear-gradient(180deg, rgba(19,55,70,.54) 0%, rgba(19,55,70,.12) 38%, rgba(19,55,70,.44) 78%, var(--night) 98%),
+    linear-gradient(90deg, rgba(19,55,70,.54), rgba(19,55,70,0) 64%);
 }
 .phero__inner{
   position:relative; z-index:var(--z-content);
@@ -620,7 +620,7 @@ section[id],[id]{scroll-margin-top:88px}
 .deckcard{
   position:relative; margin:0; overflow:hidden;
   border-radius:var(--r); border:1px solid rgba(201,162,39,.2);
-  background:rgba(12,33,41,.4);
+  background:rgba(19,55,70,.4);
   transition:border-color var(--t), transform var(--t);
 }
 .deckcard:hover{border-color:rgba(201,162,39,.55); transform:translateY(-3px)}
@@ -628,7 +628,7 @@ section[id],[id]{scroll-margin-top:88px}
 .deckcard:hover > img{transform:scale(1.04)}
 .deckcard figcaption{
   position:absolute; inset:auto 0 0 0; padding:1rem 1.1rem;
-  background:linear-gradient(180deg,transparent,rgba(12,33,41,.9) 55%);
+  background:linear-gradient(180deg,transparent,rgba(19,55,70,.9) 55%);
 }
 .deckcard figcaption h3{font-size:1.15rem; margin-bottom:.25rem}
 .deckcard figcaption p{margin:0; font-size:.85rem; color:var(--cream-2)}
@@ -639,7 +639,7 @@ section[id],[id]{scroll-margin-top:88px}
   background:
     linear-gradient(var(--hull),var(--hull)) padding-box,
     linear-gradient(145deg,var(--brass-lt),var(--brass-dk) 42%,var(--brass-lt) 72%,#8a6f18) border-box;
-  box-shadow:0 18px 40px -22px rgba(0,0,0,.9), 0 0 0 1px rgba(12,33,41,.6);
+  box-shadow:0 18px 40px -22px rgba(0,0,0,.9), 0 0 0 1px rgba(19,55,70,.6);
 }
 .porthole::after{
   content:''; position:absolute; inset:0; border-radius:50%; pointer-events:none;
@@ -662,7 +662,7 @@ section[id],[id]{scroll-margin-top:88px}
 .step{
   position:relative; padding:1.15rem 1.1rem 1.2rem;
   border:1px solid rgba(201,162,39,.25); border-radius:var(--r);
-  background:linear-gradient(160deg,rgba(26,71,87,.5),rgba(18,48,60,.5));
+  background:linear-gradient(160deg,rgba(36,95,116,.5),rgba(18,48,60,.5));
   counter-increment:step;
 }
 .step::before{
@@ -696,8 +696,12 @@ section[id],[id]{scroll-margin-top:88px}
 .charter__copy h2{font-size:clamp(2.2rem,1.4rem + 3.2vw,4.2rem); margin-bottom:1.5rem}
 .charter__copy h2 em{font-style:italic; font-weight:400; color:var(--brass-lt)}
 .charter__copy > p{color:var(--cream-2); max-width:52ch; margin-bottom:1.75rem}
-.section--light .charter__copy > p{color:var(--ink-2)}
-.section--light .charter__copy h2 em{color:var(--brass-dk)}
+/* Blok pocita s tmavou sekci, na svetlem pozadi se musi prebarvit. Plati to
+   pro obe svetle varianty, --light i --day; jinak zustane krem na kremu. */
+.section--light .charter__copy > p,
+.section--day .charter__copy > p{color:var(--ink-2)}
+.section--light .charter__copy h2 em,
+.section--day .charter__copy h2 em{color:var(--brass-dk)}
 
 .chips{display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:2rem}
 .chips li{
@@ -757,11 +761,12 @@ section[id],[id]{scroll-margin-top:88px}
 @media (min-width:900px){ .gift{grid-template-columns:1fr 1fr} }
 .gift__copy h2{font-size:clamp(1.9rem,1.3rem + 2.4vw,3.2rem); margin-bottom:1.25rem}
 .gift__copy p{color:var(--cream-2); max-width:48ch; margin-bottom:2rem}
-.section--light .gift__copy p{color:var(--ink-2)}
+.section--light .gift__copy p,
+.section--day .gift__copy p{color:var(--ink-2)}
 
 .cert__inner{
   position:relative; padding:clamp(1.75rem,4vw,2.75rem);
-  background:linear-gradient(150deg,#12303d,#0b212b);
+  background:linear-gradient(150deg,#1B4A5C,#123443);
   border:1px solid rgba(201,162,39,.45); border-radius:var(--r);
   box-shadow:0 40px 70px -40px rgba(0,0,0,.95);
   transform:rotate(-1.6deg);
@@ -802,7 +807,7 @@ section[id],[id]{scroll-margin-top:88px}
 .gallery figure{margin:0; overflow:hidden; border-radius:var(--r); position:relative; background:var(--hull)}
 .gallery img{
   width:100%; aspect-ratio:3/2; object-fit:cover;
-  filter:saturate(.55) contrast(1.06) brightness(.9);
+  filter:saturate(.72) contrast(1.02);
   transition:filter 500ms var(--ease), transform 700ms var(--ease);
 }
 .gallery figure::after{
@@ -817,7 +822,7 @@ section[id],[id]{scroll-margin-top:88px}
 @media (min-width:960px){ .booking__grid{grid-template-columns:1.35fr 1fr; align-items:start} }
 
 .form{
-  background:linear-gradient(160deg,rgba(26,71,87,.55),rgba(18,48,60,.55));
+  background:linear-gradient(160deg,rgba(36,95,116,.55),rgba(18,48,60,.55));
   border:1px solid rgba(201,162,39,.22); border-radius:var(--r);
   padding:clamp(1.5rem,3.5vw,2.5rem);
 }
@@ -831,7 +836,7 @@ section[id],[id]{scroll-margin-top:88px}
 }
 .field input,.field select,.field textarea{
   width:100%; padding:.85rem 1rem; min-height:48px;
-  background:rgba(12,33,41,.55); color:var(--cream);
+  background:rgba(19,55,70,.55); color:var(--cream);
   border:1px solid rgba(201,162,39,.28); border-radius:var(--r-sm);
   transition:border-color var(--t), background-color var(--t), box-shadow var(--t);
 }
@@ -912,7 +917,7 @@ a.contactcard__row:hover{color:var(--brass-lt); padding-left:.35rem}
   transition:color var(--t), transform var(--t);
 }
 .footer__nav a:hover{color:var(--brass-lt); transform:translateX(3px)}
-.footer__bar{border-top:1px solid rgba(201,162,39,.14); background:rgba(0,0,0,.18)}
+.footer__bar{border-top:1px solid rgba(201,162,39,.14); background:rgba(0,0,0,.1)}
 .footer__barin{
   display:flex; flex-wrap:wrap; gap:1rem; justify-content:space-between; align-items:center;
   padding-block:1.35rem;
@@ -936,17 +941,7 @@ a.contactcard__row:hover{color:var(--brass-lt); padding-left:.35rem}
     transition-duration:.01ms !important;
   }
   .js .reveal{opacity:1 !important; transform:none !important}
-  .compass,.route__boat,.boat__smoke ellipse{
-  position:absolute; left:0; right:0; margin-inline:auto; bottom:11%;
-  width:clamp(160px,18vw,260px); z-index:3;
-  filter:drop-shadow(0 18px 26px rgba(0,0,0,.45));
-  animation:bobBoat 6s ease-in-out infinite;
-}
-.route__boat::after{
-  content:''; position:absolute; left:6%; right:6%; bottom:-9%; height:16px;
-  background:radial-gradient(ellipse at 50% 40%, rgba(201,162,39,.3), transparent 72%);
-  filter:blur(3px); pointer-events:none;
-}
+  .compass,.route__boat,.boat__smoke ellipse{animation:none !important}
   .route{height:auto !important}
   .route__sticky{display:none !important}
   .route__mobile{display:block !important}
