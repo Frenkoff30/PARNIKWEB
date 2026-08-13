@@ -77,6 +77,16 @@ def spire(cx, ty, tw, h):
     return 'M%g %g l%g %g l%g %g Z' % (cx - hw, ty, hw, -h, hw, h)
 
 
+def quadriga(px, py):
+    """Vuz se spreženim na pylonu. Vsechny dily se prekryvaji, aby drzely
+    pohromade, a vinou se stejnym smerem jako zbytek siluety."""
+    return ('M%g %g v-12 h11 v12 Z' % (px, py)                       # vuz
+            + 'M%g %g v-10 l4 -6 h13 l4 6 v10 Z' % (px + 9, py)      # telo spreženi
+            + 'M%g %g l3 -9 l4 1 l-3 8 Z' % (px + 15, py - 13)       # krk a hlava
+            + 'M%g %g l3 -9 l4 1 l-3 8 Z' % (px + 21, py - 13)
+            + 'M%g %g v-8 l3 -4 l4 4 v8 Z' % (px + 2, py - 9))       # vozataj
+
+
 def roofline(x0, x1, hmin, hmax, unit, detail=2, flat=False):
     """
     Rada domu. detail 0 = jen obrysy, 1 = strechy a vikyre, 2 = plus okna.
@@ -301,16 +311,18 @@ s('<path d="M3126 %d V434h344v%d z"/>' % (WL, WL - 434))
 s('<path d="M3156 434v-30h284v30z"/>')
 s('<path d="M3150 404c58-30 238-30 296 0z"/>')
 s('<path d="M3132 434v-40h40v40z"/><path d="M3424 434v-40h40v40z"/>')
-for qx in (3136, 3428):
-    s('<path d="M%g 394c5-12 12-16 20-16 6 0 9 4 12 4s6-6 4-11c8 4 11 11 8 20z"/>' % qx)
+for qx in (3130, 3434):
+    s('<path d="%s"/>' % quadriga(qx, 394))
 for ax in range(3180, 3418, 30):
     s('<path d="M%g %d v-88a10 10 0 0 1 20 0v88z" fill="%s"/>' % (ax, WL, MID))
 
 # --- Tancici dum
 s('<path d="M3756 %d V416h128v%d z"/>' % (WL, WL - 416))
-s('<path d="M3748 416h144v-13h-144z"/>')
-s('<path d="M3670 %d c7-82 49-111 40-167-5-36 19-55 50-50v217z"/>' % WL)
-s('<ellipse cx="3820" cy="394" rx="48" ry="11"/>')
+s('<path d="M3748 403h144v13h-144z"/>')
+s('<path d="M3664 %d C3668 546 3694 516 3702 486 C3708 462 3696 446 3702 430 '
+  'C3710 412 3732 404 3758 404 V%d Z"/>' % (WL, WL))
+s('<path d="M3800 403a42 27 0 0 1 84 0z"/>')
+s('<path d="M3838 379v-16h8v16z"/>')
 
 # --- Vysehrad
 s('<path d="M4526 %d V462h408v%d z"/>' % (WL, WL - 462))
